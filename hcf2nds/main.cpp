@@ -54,11 +54,17 @@ void load(const std::string& key , const Schema& schema, const DataDescriptor& d
 
 int main(int argc, char *argv[]) {
 
-	std::string xmlfile{ "flights-delay.xml" }, outputpath{ ".\\" };
+	std::string xmlfile, outputpath;
 
-	if (argc != 3) {
+	if (argc < 2) {
 		std::cerr << "error: invalid argument" << std::endl;
-		//exit(-1);
+		exit(-1);
+	} else if (argc == 2) {
+		xmlfile = std::string(argv[1]);
+		outputpath = ".\\";
+	} else {
+		xmlfile = std::string(argv[1]);
+		outputpath = std::string(argv[2]);
 	}
 
 	Schema schema(loadConfig(xmlfile));
