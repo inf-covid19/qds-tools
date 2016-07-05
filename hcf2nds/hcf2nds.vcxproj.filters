@@ -21,5 +21,11 @@
     <ClInclude Include="stdafx.h">
       <Filter>0.Precompiled Headers</Filter>
     </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DataDescriptor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
