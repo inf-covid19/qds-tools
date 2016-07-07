@@ -155,6 +155,7 @@ int main(int argc, char *argv[]) {
 		boost::property_tree::ptree node;
 
 		node.put("key", key);
+      node.put("bin", schema.leaf);
 		node.put("offset", offset);
 
 		offset += sizeof(float) * 2;
