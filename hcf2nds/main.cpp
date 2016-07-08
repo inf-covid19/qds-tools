@@ -143,6 +143,7 @@ int main(int argc, char* argv[]) {
 
    config_node.put("name", schema.name);
    config_node.put("bytes", header.bytes);
+   config_node.put("leaf", schema.leaf);
    config_node.put("file", schema.name + ".nds");
 
    boost::property_tree::ptree schema_node;
@@ -152,8 +153,7 @@ int main(int argc, char* argv[]) {
    for (const auto& key : schema.spatial) {
       boost::property_tree::ptree node;
 
-      node.put("key", key);
-      node.put("bin", schema.leaf);
+      node.put("key", key);      
       node.put("offset", offset);
 
       offset += sizeof(float) * 2;
