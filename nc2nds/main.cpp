@@ -119,7 +119,7 @@ void nanocubes_log(const std::vector<std::string>& files, const std::string& out
          std::string line;
          std::getline(infile, line);
 
-         std::string query;
+         std::string query = "/rest/query";
 
          try {
             if (line.empty()) continue;
