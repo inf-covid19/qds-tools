@@ -62,11 +62,11 @@ void nanocubes_log(const std::vector<std::string>& files, const std::string& out
 
    // flights
    flights.instance = "performance";
-   flights.tseries = "tseries";
+   flights.tseries = "0";
    flights.from_bin = date_util::mkgmtime(1987, 1, 1);
    flights.to_bin = date_util::mkgmtime(2009, 1, 1);
    flights.bucket_size = 14400;
-   flights.schemata.insert({ "ontime", Translate("dep_delay", {
+   flights.schemata.insert({ "ontime", Translate("0", {
                                                     "61 _min_early",
                                                     "31_60_min_early",
                                                     "16_30_min_early",
@@ -76,36 +76,36 @@ void nanocubes_log(const std::vector<std::string>& files, const std::string& out
                                                     "16_30_min_late",
                                                     "31_60_min_late",
                                                     "61 _min_late" }) });
-   flights.schemata.insert({ "carrier", Translate("carrier", { "Pacific_Southwest", "TWA", "United", "Southwest", "Eastern", "America_West", "Northwest",
+   flights.schemata.insert({ "carrier", Translate("1", { "Pacific_Southwest", "TWA", "United", "Southwest", "Eastern", "America_West", "Northwest",
                                                      "Pan_Am", "Piedmont", "Continental", "Delta", "American", "US_Air", "Alaska", "Midway", "Aloha", "American_Eagle", "Skywest", "Expressjet", "ATA", "Altantic_Southest", "AirTran", "JetBlue", "Independence", "Hawaiian", "Comair", "Frontier", "Mesa", "Pinnacle" }) });
 
    // brightkite
    brightkite.instance = "brightkite";
-   brightkite.tseries = "tseries";
+   brightkite.tseries = "0";
    brightkite.from_bin = date_util::mkgmtime(2008, 1, 1);
    brightkite.to_bin = date_util::mkgmtime(2010, 12, 1);
    brightkite.bucket_size = 604800;
-   brightkite.schemata.insert({ "day_of_week", Translate("day_of_week", { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun" }) });
-   brightkite.schemata.insert({ "hour_of_day", Translate("hour_of_day", { "00", "01", "02", "03", "04", "05", "06",
+   brightkite.schemata.insert({ "day_of_week", Translate("0", { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun" }) });
+   brightkite.schemata.insert({ "hour_of_day", Translate("1", { "00", "01", "02", "03", "04", "05", "06",
                                                             "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }) });
 
    // gowalla
    gowalla.instance = "gowalla";
-   gowalla.tseries = "tseries";
+   gowalla.tseries = "0";
    gowalla.from_bin = date_util::mkgmtime(2008, 1, 1);
    gowalla.to_bin = date_util::mkgmtime(2010, 12, 1);
    gowalla.bucket_size = 604800;
-   gowalla.schemata.insert({ "dayofweek", Translate("day_of_week", { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun" }) });
-   gowalla.schemata.insert({ "hour", Translate("hour_of_day", { "0", "1", "2", "3", "4", "5", "6",
+   gowalla.schemata.insert({ "dayofweek", Translate("0", { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun" }) });
+   gowalla.schemata.insert({ "hour", Translate("1", { "0", "1", "2", "3", "4", "5", "6",
                                                   "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }) });
 
    // twitter
    twitter.instance = "twitter-small";
-   twitter.tseries = "tseries";
+   twitter.tseries = "0";
    twitter.from_bin = date_util::mkgmtime(2011, 11, 1);
    twitter.to_bin = date_util::mkgmtime(2012, 11, 1);
    twitter.bucket_size = 14400;
-   twitter.schemata.insert({ "device", Translate("device", { "none", "iphone", "android", "ipad", "windows" }) });
+   twitter.schemata.insert({ "device", Translate("0", { "none", "iphone", "android", "ipad", "windows" }) });
 
    std::ofstream output_file(output + ".csv", std::ios::out);
    

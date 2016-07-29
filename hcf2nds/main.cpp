@@ -143,17 +143,19 @@ int main(int argc, char* argv[]) {
 
    config_node.put("name", schema.name);
    config_node.put("bytes", header.bytes);
-   config_node.put("leaf", schema.leaf);
    config_node.put("file", schema.name + ".nds");
 
    boost::property_tree::ptree schema_node;
 
+   uint32_t index = 0;
    uint32_t offset = 0;
 
+   index = 0;
    for (const auto& key : schema.spatial) {
       boost::property_tree::ptree node;
 
-      node.put("key", key);      
+      node.put("index", index++);      
+      node.put("bin", schema.leaf);
       node.put("offset", offset);
 
       offset += sizeof(float) * 2;
@@ -161,10 +163,11 @@ int main(int argc, char* argv[]) {
       schema_node.add_child("spatial", node);
    }
 
+   index = 0;
    for (const auto& key : schema.categorical) {
       boost::property_tree::ptree node;
 
-      node.put("key", key.first);
+      node.put("index", index++);
       node.put("bin", key.second);
       node.put("offset", offset);
 
@@ -173,11 +176,12 @@ int main(int argc, char* argv[]) {
       schema_node.add_child("categorical", node);
    }
 
+   index = 0;
    for (const auto& key : schema.temporal) {
 
       boost::property_tree::ptree node;
 
-      node.put("key", key.first);
+      node.put("index", index++);
       node.put("bin", key.second);
       node.put("offset", offset);
 
