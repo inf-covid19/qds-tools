@@ -81,22 +81,22 @@ void nanocubes_log(const std::vector<std::string>& files, const std::string& out
 
    // brightkite
    brightkite.instance = "brightkite";
-   brightkite.tseries = "0";
+   brightkite.tseries = "3";
    brightkite.from_bin = date_util::mkgmtime(2008, 1, 1);
    brightkite.to_bin = date_util::mkgmtime(2010, 12, 1);
    brightkite.bucket_size = 604800;
-   brightkite.schemata.insert({ "day_of_week", Translate("0", { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun" }) });
-   brightkite.schemata.insert({ "hour_of_day", Translate("1", { "00", "01", "02", "03", "04", "05", "06",
+   brightkite.schemata.insert({ "day_of_week", Translate("1", { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun" }) });
+   brightkite.schemata.insert({ "hour_of_day", Translate("2", { "00", "01", "02", "03", "04", "05", "06",
                                                             "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }) });
 
    // gowalla
    gowalla.instance = "gowalla";
-   gowalla.tseries = "0";
+   gowalla.tseries = "3";
    gowalla.from_bin = date_util::mkgmtime(2008, 1, 1);
    gowalla.to_bin = date_util::mkgmtime(2010, 12, 1);
    gowalla.bucket_size = 604800;
-   gowalla.schemata.insert({ "dayofweek", Translate("0", { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun" }) });
-   gowalla.schemata.insert({ "hour", Translate("1", { "0", "1", "2", "3", "4", "5", "6",
+   gowalla.schemata.insert({ "dayofweek", Translate("1", { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun" }) });
+   gowalla.schemata.insert({ "hour", Translate("2", { "0", "1", "2", "3", "4", "5", "6",
                                                   "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }) });
 
    // twitter
