@@ -62,11 +62,11 @@ void nanocubes_log(const std::vector<std::string>& files, const std::string& out
 
    // flights
    flights.instance = "performance";
-   flights.tseries = "0";
+   flights.tseries = "3";
    flights.from_bin = date_util::mkgmtime(1987, 1, 1);
    flights.to_bin = date_util::mkgmtime(2009, 1, 1);
    flights.bucket_size = 14400;
-   flights.schemata.insert({ "ontime", Translate("0", {
+   flights.schemata.insert({ "ontime", Translate("1", {
                                                     "61 _min_early",
                                                     "31_60_min_early",
                                                     "16_30_min_early",
@@ -76,7 +76,7 @@ void nanocubes_log(const std::vector<std::string>& files, const std::string& out
                                                     "16_30_min_late",
                                                     "31_60_min_late",
                                                     "61 _min_late" }) });
-   flights.schemata.insert({ "carrier", Translate("1", { "Pacific_Southwest", "TWA", "United", "Southwest", "Eastern", "America_West", "Northwest",
+   flights.schemata.insert({ "carrier", Translate("2", { "Pacific_Southwest", "TWA", "United", "Southwest", "Eastern", "America_West", "Northwest",
                                                      "Pan_Am", "Piedmont", "Continental", "Delta", "American", "US_Air", "Alaska", "Midway", "Aloha", "American_Eagle", "Skywest", "Expressjet", "ATA", "Altantic_Southest", "AirTran", "JetBlue", "Independence", "Hawaiian", "Comair", "Frontier", "Mesa", "Pinnacle" }) });
 
    // brightkite
@@ -101,11 +101,11 @@ void nanocubes_log(const std::vector<std::string>& files, const std::string& out
 
    // twitter
    twitter.instance = "twitter-small";
-   twitter.tseries = "0";
+   twitter.tseries = "2";
    twitter.from_bin = date_util::mkgmtime(2011, 11, 1);
    twitter.to_bin = date_util::mkgmtime(2012, 11, 1);
    twitter.bucket_size = 14400;
-   twitter.schemata.insert({ "device", Translate("0", { "none", "iphone", "android", "ipad", "windows" }) });
+   twitter.schemata.insert({ "device", Translate("1", { "none", "iphone", "android", "ipad", "windows" }) });
 
    std::ofstream output_file(output + ".csv", std::ios::out);
    

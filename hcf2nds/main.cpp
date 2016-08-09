@@ -150,20 +150,7 @@ int main(int argc, char* argv[]) {
    uint32_t index = 0;
    uint32_t offset = 0;
 
-   index = 0;
-   for (const auto& key : schema.spatial) {
-      boost::property_tree::ptree node;
-
-      node.put("index", index++);      
-      node.put("bin", schema.leaf);
-      node.put("offset", offset);
-
-      offset += sizeof(float) * 2;
-
-      schema_node.add_child("spatial", node);
-   }
-
-   index = 0;
+   index = 1;
    for (const auto& key : schema.categorical) {
       boost::property_tree::ptree node;
 
@@ -176,7 +163,6 @@ int main(int argc, char* argv[]) {
       schema_node.add_child("categorical", node);
    }
 
-   index = 0;
    for (const auto& key : schema.temporal) {
 
       boost::property_tree::ptree node;
@@ -188,6 +174,19 @@ int main(int argc, char* argv[]) {
       offset += sizeof(uint32_t);
 
       schema_node.add_child("temporal", node);
+   }
+
+   index = 0;
+   for (const auto& key : schema.spatial) {
+      boost::property_tree::ptree node;
+
+      node.put("index", index++);
+      node.put("bin", schema.leaf);
+      node.put("offset", offset);
+
+      offset += sizeof(float) * 2;
+
+      schema_node.add_child("spatial", node);
    }
 
    config_node.add_child("schema", schema_node);
