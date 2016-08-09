@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
    DataDescriptor descriptor(schema);
 
    std::unordered_map<std::string, std::vector<char>> hcf_data;
-
+   
    // nds file
    /////////////////////////////////////////////////////////////
 
@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
 
    header.bytes = (schema.spatial.size() * sizeof(float) * 2) + (schema.categorical.size() * sizeof(uint8_t)) + (schema.temporal.size() * sizeof(uint32_t));
    header.records = descriptor.size();
-
+   
    output_nds.write((char*)&header, sizeof(BinaryHeader));
 
    for (const auto& key : schema.spatial) {
@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
    boost::property_tree::ptree schema_node;
 
    uint32_t index = 0;
-   uint32_t offset = 0;
+   uint32_t offset = 8;
 
    index = 1;
    for (const auto& key : schema.categorical) {
@@ -182,9 +182,7 @@ int main(int argc, char* argv[]) {
 
       node.put("index", index++);
       node.put("bin", schema.leaf);
-      node.put("offset", offset);
-
-      offset += sizeof(float) * 2;
+      node.put("offset", 0);
 
       schema_node.add_child("spatial", node);
    }
