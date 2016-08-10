@@ -77,7 +77,9 @@ void nanocubes_log(const std::vector<std::string>& files, const std::string& out
                                                     "31_60_min_late",
                                                     "61 _min_late" }) });
    flights.schemata.insert({ "carrier", Translate("2", { "Pacific_Southwest", "TWA", "United", "Southwest", "Eastern", "America_West", "Northwest",
-                                                     "Pan_Am", "Piedmont", "Continental", "Delta", "American", "US_Air", "Alaska", "Midway", "Aloha", "American_Eagle", "Skywest", "Expressjet", "ATA", "Altantic_Southest", "AirTran", "JetBlue", "Independence", "Hawaiian", "Comair", "Frontier", "Mesa", "Pinnacle" }) });
+                                                     "Pan_Am", "Piedmont", "Continental", "Delta", "American", "US_Air", "Alaska", "Midway", "Aloha",
+                                                     "American_Eagle", "Skywest", "Expressjet", "ATA", "Altantic_Southest", "AirTran", "JetBlue",
+                                                     "Independence", "Hawaiian", "Comair", "Frontier", "Mesa", "Pinnacle" }) });
 
    // brightkite
    brightkite.instance = "brightkite";
@@ -85,9 +87,11 @@ void nanocubes_log(const std::vector<std::string>& files, const std::string& out
    brightkite.from_bin = date_util::mkgmtime(2008, 1, 1);
    brightkite.to_bin = date_util::mkgmtime(2010, 12, 1);
    brightkite.bucket_size = 604800;
-   brightkite.schemata.insert({ "day_of_week", Translate("1", { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun" }) });
-   brightkite.schemata.insert({ "hour_of_day", Translate("2", { "00", "01", "02", "03", "04", "05", "06",
-                                                            "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }) });
+   brightkite.schemata.insert({ "day_of_week", Translate("1", { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" }) });
+   brightkite.schemata.insert({ "hour_of_day", Translate("2", { "00", "01", "02", "03", "04", "05",
+                                                                "06", "07", "08", "09", "10", "11",
+                                                                "12", "13", "14", "15", "16", "17",
+                                                                "18", "19", "20", "21", "22", "23" }) });
 
    // gowalla
    gowalla.instance = "gowalla";
@@ -95,9 +99,11 @@ void nanocubes_log(const std::vector<std::string>& files, const std::string& out
    gowalla.from_bin = date_util::mkgmtime(2008, 1, 1);
    gowalla.to_bin = date_util::mkgmtime(2010, 12, 1);
    gowalla.bucket_size = 604800;
-   gowalla.schemata.insert({ "dayofweek", Translate("1", { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat","Sun" }) });
-   gowalla.schemata.insert({ "hour", Translate("2", { "0", "1", "2", "3", "4", "5", "6",
-                                                  "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }) });
+   gowalla.schemata.insert({ "dayofweek", Translate("1", { "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun" }) });
+   gowalla.schemata.insert({ "hour", Translate("2", { "0", "1", "2", "3", "4", "5",
+                                                      "6", "7", "8", "9", "10", "11",
+                                                      "12", "13", "14", "15", "16", "17",
+                                                      "18", "19", "20", "21", "22", "23" }) });
 
    // twitter
    twitter.instance = "twitter-small";
@@ -108,7 +114,7 @@ void nanocubes_log(const std::vector<std::string>& files, const std::string& out
    twitter.schemata.insert({ "device", Translate("1", { "none", "iphone", "android", "ipad", "windows" }) });
 
    std::ofstream output_file(output + ".csv", std::ios::out);
-   
+
    std::unordered_map<std::string, Nanocube> nanocubes{ { "13", flights },{ "14", brightkite },{ "12", gowalla },{ "15", twitter } };
 
    for (auto& file : files) {
@@ -158,7 +164,7 @@ void nanocubes_log(const std::vector<std::string>& files, const std::string& out
                } else if (url.size() > 13) {
                   if (url[12] == "where") nanocubes_log_fields(nanocubes[url[4]], query, url[13]);
                   else if (url[12] == "tseries") nanocubes_log_tseries(nanocubes[url[4]], query, url[13], url[14]);
-               }               
+               }
             }
          } catch (std::invalid_argument) {
             std::cerr << "error: invalid nanocubes query [" << line << "]" << std::endl;
@@ -182,7 +188,7 @@ int main(int argc, char* argv[]) {
       exit(-1);
    } else {
       for (int i = 1; i < argc; i++) {
-         
+
          std::string arg = argv[i];
 
          if (arg == std::string("-output")) {
