@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/hcf2nds_unity.dir/cotire/hcf2nds_CXX_unity.cxx.o  -o hcf2nds -ldl -Wl,-Bstatic -lboost_serialization -Wl,-Bdynamic 

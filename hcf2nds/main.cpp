@@ -66,6 +66,7 @@ int main(int argc, char* argv[]) {
    }
 
    Schema schema(loadConfig(xmlfile));
+
    DataDescriptor descriptor(schema);
 
    std::unordered_map<std::string, std::vector<char>> hcf_data;

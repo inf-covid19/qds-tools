@@ -6,6 +6,9 @@ public:
 	DataDescriptor(ulong size) : _size(size) { }
 	DataDescriptor(const Schema& schema) : _schema(schema) {
 		std::ifstream is(schema.path + "hcf/descriptor.hcf");
+
+std::cout << schema.path + "hcf/descriptor.hcf" << std::endl;
+		
 		boost::archive::text_iarchive archive(is);
 
 		archive & (*this);
