@@ -1,8 +1,0 @@
-/home/cicerolp/Git/nds-tools/hcf2nds/build/CMakeFiles/rebuild_cache.dir
-/home/cicerolp/Git/nds-tools/hcf2nds/build/CMakeFiles/hcf2nds_unity.dir
-/home/cicerolp/Git/nds-tools/hcf2nds/build/CMakeFiles/hcf2nds.dir
-/home/cicerolp/Git/nds-tools/hcf2nds/build/CMakeFiles/edit_cache.dir
-/home/cicerolp/Git/nds-tools/hcf2nds/build/CMakeFiles/all_unity.dir
-/home/cicerolp/Git/nds-tools/hcf2nds/build/CMakeFiles/clean_cotire.dir
-/home/cicerolp/Git/nds-tools/hcf2nds/build/CMakeFiles/hcf2nds_pch.dir
-/home/cicerolp/Git/nds-tools/hcf2nds/build/CMakeFiles/all_pch.dir
