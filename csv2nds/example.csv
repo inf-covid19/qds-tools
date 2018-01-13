@@ -1,0 +1,5 @@
+Gênero,UF da Pessoa,Cidade da Pessoa,Idade,Permission Status, Deliverability Status, Origem do Contato, UF da Loja, Cidade da Loja, Tem Telefone, Tem E-mail, Tem Endereço, Tem Celular, Tem CPF, Data Referência, Lat, Lon
+M,RS,Porto Alegre,27,1,1,8,RS,Porto Alegre,1,1,1,1,1,01/01/2018,-10,-10
+F,RS,Porto Alegre,32,1,1,9,RS,Porto Alegre,1,1,1,1,1,10/10/2018,-20,-20
+F,RS,Porto Alegre,50,1,1,9,RS,Porto Alegre,1,1,1,1,1,12/08/2018,-30,-30
+M,RS,Porto Alegre,50,1,1,9,RS,Porto Alegre,1,1,1,1,1,05/04/2018,-40,-40

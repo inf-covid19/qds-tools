@@ -15,6 +15,7 @@
 #include <thread>
 #include <vector>
 #include <string>
+#include <random>
 #include <fstream>
 #include <iostream>
 #include <algorithm>
@@ -23,6 +24,7 @@
 #include <unordered_map>
 
 // boost library
+#include <boost/regex.hpp>
 #include <boost/program_options.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>

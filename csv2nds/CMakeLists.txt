@@ -1,14 +1,14 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 3.0.0)
 PROJECT(csv2nds)
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/../CMake")
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 include(cotire)
 
 aux_source_directory(. SRC_LIST)
 
 include_directories(AFTER ./)
-include_directories(AFTER ./../include)
+include_directories(AFTER ./include)
 
 
 file(GLOB_RECURSE HEADERS "./*.h")
@@ -16,13 +16,12 @@ source_group("Header Files" FILES ${HEADERS})
 
 add_executable (${PROJECT_NAME} ${SRC_LIST} ${HEADERS}
    main.cpp
-   string_util.cpp
-)
+        types.h date_util.h)
 
 set(Boost_USE_MULTITHREAD ON)
 set(Boost_USE_STATIC_LIBS ON)
 
-find_package(Boost COMPONENTS serialization program_options REQUIRED)
+find_package(Boost COMPONENTS serialization program_options regex REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIR})
