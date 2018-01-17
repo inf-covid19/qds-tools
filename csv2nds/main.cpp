@@ -210,7 +210,6 @@ void gerenate_from_csv(std::shared_ptr<TSchema> &schema) {
 
   BinaryHeader bin_header;
 
-  // TODO add spatial and temporal dimensions
   // sum to record size
   bin_header.bytes = 0;
   bin_header.records = 0;
@@ -224,6 +223,9 @@ void gerenate_from_csv(std::shared_ptr<TSchema> &schema) {
 
   // used to split each line to tokens, assuming ',' as column separator
   const boost::regex fieldsregx(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+
+  namespace bt = boost::posix_time;
+  const bt::ptime timet_start(boost::gregorian::date(1970, 1, 1));
 
   std::string line;
   std::ifstream infile(schema->input);
@@ -289,10 +291,16 @@ void gerenate_from_csv(std::shared_ptr<TSchema> &schema) {
 
             uint32_t formated_value;
 
-            // convert date to epoch
-            // day / month / year
-            auto date = string_util::split(unformatted_data[d->column_index], "/");
-            formated_value = date_util::mkgmtime(std::stoi(date[2]), std::stoi(date[1]), std::stoi(date[0]));
+            bt::ptime pt;
+            std::locale format(std::locale::classic(), new bt::time_input_facet(d->format.c_str()));
+
+            std::istringstream is(unformatted_data[d->column_index]);
+            is.imbue(format);
+            is >> pt;
+
+            bt::time_duration diff = pt - timet_start;
+
+            formated_value = diff.total_seconds();
 
             binary.write((char *) &formated_value, sizeof(uint32_t));
           }
@@ -418,6 +426,8 @@ std::shared_ptr<TSchema> read_xml_schema(const std::string &xml_input) {
           dimension->max = date_util::mkgmtime(std::stoi(max[2]), std::stoi(max[1]), std::stoi(max[0]));
 
           dimension->interval = std::stoi(bins.second.get("interval", ""));
+
+          dimension->format = bins.second.get("format", "");
         }
       }
 

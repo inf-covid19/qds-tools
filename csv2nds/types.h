@@ -68,6 +68,7 @@ struct TTemporal : public dimesion_t {
 
   uint32_t min, max;
   uint32_t interval;
+  std::string format;
 
   uint32_t bytes() const override {
     return sizeof(uint32_t);

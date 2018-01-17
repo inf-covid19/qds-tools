@@ -120,6 +120,7 @@
         <temporal index="14" name="data-referencia">
             <bins>
                 <bin>
+                    <format>%d/%m/%Y-%H:%M</format>
                     <min>01/01/2017</min>
                     <interval>86400</interval>
                     <max>31/12/2017</max>
