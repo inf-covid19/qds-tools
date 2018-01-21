@@ -325,8 +325,6 @@ void gerenate_from_csv(std::shared_ptr<TSchema> &schema) {
             // lon -> lat column + 1
             formated_value.lon = std::stof(unformatted_data[d->column_index + 1]);
 
-            std::cout << formated_value.lat << ":" << formated_value.lon << std::endl;
-
             binary.write((char *) &formated_value, sizeof(coordinates_t));
           }
             break;
