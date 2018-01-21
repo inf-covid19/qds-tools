@@ -270,14 +270,22 @@ void gerenate_from_csv(std::shared_ptr<TSchema> &schema) {
               }
                 break;
               case TCategorical::RANGE: {
-
                 auto it =
                     std::lower_bound(d->range.begin(), d->range.end(), std::stof(unformatted_data[d->column_index]));
                 formated_value = it - d->range.begin();
               }
                 break;
+
               case TCategorical::BINARY: {
                 formated_value = std::stoi(unformatted_data[d->column_index]);
+              }
+                break;
+
+              case TCategorical::SEQUENTIAl: {
+                uint32_t diff = d->sequential.second - d->sequential.first + 1;
+                float rand = std::stof(unformatted_data[d->column_index]);
+
+                formated_value = linearScale(d->sequential.first, d->sequential.second + 1, 0, diff, rand);
               }
                 break;
             }
@@ -316,6 +324,8 @@ void gerenate_from_csv(std::shared_ptr<TSchema> &schema) {
 
             // lon -> lat column + 1
             formated_value.lon = std::stof(unformatted_data[d->column_index + 1]);
+
+            std::cout << formated_value.lat << ":" << formated_value.lon << std::endl;
 
             binary.write((char *) &formated_value, sizeof(coordinates_t));
           }
@@ -391,7 +401,7 @@ std::shared_ptr<TSchema> read_xml_schema(const std::string &xml_input) {
             }
               break;
             case TCategorical::RANGE: {
-              dimension->range.emplace_back(bins.second.get("min", 0));
+              dimension->range.emplace_back(bins.second.get("max", 0));
             }
               break;
             case TCategorical::BINARY: {
