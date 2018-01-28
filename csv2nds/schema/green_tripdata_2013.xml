@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config ver="1.0">
+    <input lines-to-skip="2">./data/green_tripdata_2013-08.csv</input>
+    <output>green_tripdata_2013-08</output>
+    <output-dir>./output</output-dir>
+    <schema>
+        <categorical index="4" type="sequential" name="RateCodeID">
+            <bins>
+                <bin>
+                    <min>1</min>
+                    <max>6</max>
+                </bin>
+            </bins>
+        </categorical>
+
+        <temporal index="1" name="lpep_pickup_datetime">
+            <bins>
+                <bin>
+                    <format>%Y-%m-%d %H:%M:%S</format>
+                    <interval>86400</interval>
+                </bin>
+            </bins>
+        </temporal>
+
+        <spatial index-lat="6" index-lon="5" name-lat="Pickup_latitude" name-lon="Pickup_longitude">
+            <bins>
+                <bin>1</bin>
+            </bins>
+        </spatial>
+
+        <payload index="17" name="Total_amount">
+            <bins>
+                <bin></bin>
+            </bins>
+        </payload>
+    </schema>
+</config>
