@@ -16,6 +16,7 @@
 #include <vector>
 #include <string>
 #include <random>
+#include <variant>
 #include <fstream>
 #include <iostream>
 #include <algorithm>

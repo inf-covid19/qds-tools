@@ -31,54 +31,79 @@ struct coordinates_t {
   float lat, lon;
 };
 
+template<typename T>
 struct dimesion_t {
-  enum EType {
-    CATEGORICAL,
-    TEMPORAL,
-    SPATIAL
+  uint32_t offset{0};
+  uint32_t csv_index{0};
+  uint32_t binary_index{0};
+
+  T temporary;
+
+  std::vector<T> data;
+
+  virtual inline uint32_t bins() const {
+    return 1;
   };
 
-  EType type;
-  uint32_t column_index;
+  virtual inline bool invalid_data(const T &value) {
+    temporary = value;
+    return false;
+  };
 
-  template<typename T>
-  static inline T *get(dimesion_t *ptr) {
-    return (T *) ptr;
+  inline uint32_t bytes() {
+    return sizeof(T);
+  };
+};
+
+struct TPayload : public dimesion_t<float> {
+};
+
+struct TSpatial : public dimesion_t<coordinates_t> {
+  union {
+    uint32_t csv_index{0};
+    struct {
+      uint32_t csv_index_lat : 16;
+      uint32_t csv_index_lon : 16;
+    };
+  };
+
+  uint32_t bin{1};
+
+  inline uint32_t bins() const override {
+    return bin;
   }
 
-  virtual uint32_t bytes() const {
-    return 0;
+  inline bool invalid_data(const coordinates_t &value) override {
+    temporary = value;
+    if (temporary.lat < -90.f || temporary.lat > 90.f) {
+      return true;
+    } else if (temporary.lon < -180.f || temporary.lat > 180.f) {
+      return true;
+    } else {
+      return false;
+    }
   }
 };
 
-struct TSpatial : public dimesion_t {
-  TSpatial() {
-    type = EType::SPATIAL;
-  }
-
-  uint32_t bytes() const override {
-    return sizeof(coordinates_t);
-  }
-};
-
-struct TTemporal : public dimesion_t {
-  TTemporal() {
-    type = EType::TEMPORAL;
-  }
-
+struct TTemporal : public dimesion_t<uint32_t> {
   uint32_t interval;
   std::string format;
 
-  uint32_t bytes() const override {
-    return sizeof(uint32_t);
+  inline uint32_t bins() const override {
+    return interval;
+  }
+
+  inline bool invalid_data(const uint32_t &value) override {
+    temporary = value;
+    if (temporary < 0 || temporary > 2147472000) {
+      return true;
+    } else {
+      return false;
+    }
   }
 };
 
-struct TCategorical : dimesion_t {
-  TCategorical() {
-    type = EType::CATEGORICAL;
-  }
-
+struct TCategorical : dimesion_t<uint8_t> {
   enum EBinType {
     DISCRETE,
     RANGE,
@@ -97,7 +122,7 @@ struct TCategorical : dimesion_t {
   // [lower_bound, upper_bound]
   std::pair<uint32_t, uint32_t> sequential;
 
-  inline uint32_t get_n_bins() const {
+  inline uint32_t bins() const override {
     switch (bin_type) {
       case TCategorical::DISCRETE: {
         return discrete.size();
@@ -118,28 +143,24 @@ struct TCategorical : dimesion_t {
     }
   }
 
-  uint32_t bytes() const override {
-    return sizeof(uint8_t);
+  inline bool invalid_data(const uint8_t &value) override {
+    temporary = value;
+    if (temporary < 0 || temporary >= bins()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 };
 
+using TDimension = std::variant<TSpatial, TCategorical, TTemporal, TPayload>;
+
 struct TSchema {
-  bool header;
+  uint32_t lines_to_skip{0};
 
   std::string input;
   std::string output;
+  std::string output_dir;
 
-  template<typename T>
-  inline T *get(uint32_t key) {
-    auto pair = dimension_map.find(key);
-
-    if (pair == dimension_map.end()) {
-      dimension_map[key] = std::make_unique<T>();
-      pair = dimension_map.find(key);
-    }
-
-    return (T *) pair->second.get();
-  }
-
-  std::map<uint32_t, std::unique_ptr<dimesion_t>> dimension_map;
+  std::vector<TDimension> dimensions;
 };
