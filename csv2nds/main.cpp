@@ -81,125 +81,9 @@ void generate_xml(std::shared_ptr<TSchema> &schema, uint32_t bytes) {
   output_xml.close();
 }
 
-std::default_random_engine _random_engine;
-std::uniform_real_distribution<double> _uniform_dist{0.0, 1.0};
-
-inline float randUniform(int min, int max) {
-  float delta = max - min;
-  return (float) (min + delta * _uniform_dist(_random_engine));
-}
-
 inline int linearScale(float min, float max, float a, float b, float x) {
   return std::floor((((b - a) * (x - min)) / (max - min)) + a);
   //return value >= b ? (b - 1) : (value < a ? a : value);
-}
-
-void generate_dummy_data(std::shared_ptr<TSchema> &schema, uint32_t number_of_elts) {
-  //std::vector<uint32_t> gender;
-  //std::iota(gender.begin(), gender.end(), 0);
-
-  // TODO add spatial dimension
-
-  // binary output
-  std::ofstream binary(schema->output, std::ios::out | std::ios::binary);
-
-  BinaryHeader bin_header;
-
-  // TODO add spatial dimension
-  bin_header.bytes = 0;
-  bin_header.records = number_of_elts;
-
-  binary.write((char *) &bin_header, sizeof(BinaryHeader));
-
-  for (auto &pair : schema->dimension_map) {
-
-    bin_header.bytes += pair.second->bytes();
-
-    switch (pair.second->type) {
-
-      case dimesion_t::CATEGORICAL: {
-        for (auto e = 0; e < number_of_elts; ++e) {
-          auto d = dimesion_t::get<TCategorical>(pair.second.get());
-
-          uint8_t formated_value;
-
-          switch (d->bin_type) {
-            case TCategorical::DISCRETE: {
-              formated_value = std::floor(randUniform(0, d->discrete.size()));
-            }
-              break;
-            case TCategorical::RANGE: {
-              formated_value = std::floor(randUniform(0, d->range.size()));
-            }
-              break;
-            case TCategorical::BINARY: {
-              //formated_value = std::stoi(unformatted_data[d.column_index]);
-              formated_value = randUniform(0, 1) < 0.5f ? 0 : 1;
-            }
-              break;
-
-            case TCategorical::SEQUENTIAl: {
-              uint32_t diff = d->sequential.second - d->sequential.first + 1;
-              float rand = randUniform(d->sequential.first, d->sequential.second + 1);
-
-              formated_value = linearScale(d->sequential.first, d->sequential.second + 1, 0, diff, rand);
-            }
-              break;
-
-          }
-
-          binary.write((char *) &formated_value, sizeof(uint8_t));
-        }
-      }
-        break;
-
-      case dimesion_t::TEMPORAL: {
-        for (auto e = 0; e < number_of_elts; ++e) {
-          auto d = dimesion_t::get<TTemporal>(pair.second.get());
-
-          uint32_t formated_value;
-
-          formated_value = randUniform(d->min, d->max);
-
-          binary.write((char *) &formated_value, sizeof(uint32_t));
-        }
-      }
-        break;
-
-      case dimesion_t::SPATIAL: {
-        for (auto e = 0; e < number_of_elts; ++e) {
-          auto d = dimesion_t::get<TSpatial>(pair.second.get());
-
-          coordinates_t formated_value;
-
-          formated_value.lat = randUniform(0, 180) - 90.f;
-          formated_value.lon = randUniform(0, 360) - 180.f;
-
-          assert(formated_value.lat > -90.f);
-          assert(formated_value.lat < 90.f);
-
-          assert(formated_value.lon > -180.f);
-          assert(formated_value.lon < 180.f);
-
-          binary.write((char *) &formated_value, sizeof(coordinates_t));
-        }
-      }
-        break;
-    }
-  }
-
-  ////////////////////////////////////////////////////////
-
-  // hack to update number of records and bytes
-
-  binary.clear();                 // clear fail and eof bits
-  binary.seekp(0, std::ios::beg); // back to the start!
-
-  binary.write((char *) &bin_header, sizeof(BinaryHeader));
-
-  binary.close();
-
-  generate_xml(schema, bin_header.bytes);
 }
 
 void gerenate_from_csv(std::shared_ptr<TSchema> &schema) {
@@ -459,8 +343,6 @@ std::shared_ptr<TSchema> read_xml_schema(const std::string &xml_input) {
 }
 
 int main(int argc, char *argv[]) {
-  bool read_from_csv = true;
-  uint32_t number_of_elts = 0;
   std::string xml_input = "schema.xml";
 
   // declare the supported options
@@ -468,12 +350,6 @@ int main(int argc, char *argv[]) {
 
   desc.add_options()("input,i", po::value<std::string>(&xml_input)->default_value(xml_input),
                      "xml input file");
-
-  desc.add_options()("csv,c", po::value<bool>(&read_from_csv)->default_value(read_from_csv),
-                     "read from csv");
-
-  desc.add_options()("elts,e", po::value<uint32_t>(&number_of_elts)->default_value(number_of_elts),
-                     "number of elements to generate");
 
   po::variables_map vm;
   po::store(po::command_line_parser(argc, argv).options(desc).run(), vm);
@@ -483,11 +359,7 @@ int main(int argc, char *argv[]) {
 
   auto schema = read_xml_schema(xml_input);
 
-  if (read_from_csv) {
-    gerenate_from_csv(schema);
-  } else {
-    generate_dummy_data(schema, number_of_elts);
-  }
+  gerenate_from_csv(schema);
 
   return 0;
 }
