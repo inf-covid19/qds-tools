@@ -66,7 +66,6 @@ struct TTemporal : public dimesion_t {
     type = EType::TEMPORAL;
   }
 
-  uint32_t min, max;
   uint32_t interval;
   std::string format;
 

@@ -309,14 +309,6 @@ std::shared_ptr<TSchema> read_xml_schema(const std::string &xml_input) {
       for (auto &bins : d.second.get_child("bins", pt::ptree())) {
         // store bin info
         if (bins.first == "bin") {
-          // convert date to epoch
-          auto min = string_util::split(bins.second.get("min", ""), "/");
-          dimension->min = date_util::mkgmtime(std::stoi(min[2]), std::stoi(min[1]), std::stoi(min[0]));
-
-          // convert date to epoch
-          auto max = string_util::split(bins.second.get("max", ""), "/");
-          dimension->max = date_util::mkgmtime(std::stoi(max[2]), std::stoi(max[1]), std::stoi(max[0]));
-
           dimension->interval = std::stoi(bins.second.get("interval", ""));
 
           dimension->format = bins.second.get("format", "");
