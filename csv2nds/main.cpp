@@ -24,6 +24,7 @@ void generate_xml(TSchema &schema, uint32_t bytes) {
       node.put("index", d->binary_index);
       node.put("bin", d->bins());
       node.put("offset", d->offset);
+      node.put("<xmlattr>.name", d->name);
 
       schema_node.add_child("spatial", node);
 
@@ -33,6 +34,7 @@ void generate_xml(TSchema &schema, uint32_t bytes) {
       node.put("index", d->binary_index);
       node.put("bin", d->bins());
       node.put("offset", d->offset);
+      node.put("<xmlattr>.name", d->name);
 
       schema_node.add_child("categorical", node);
 
@@ -42,6 +44,7 @@ void generate_xml(TSchema &schema, uint32_t bytes) {
       node.put("index", d->binary_index);
       node.put("bin", d->bins());
       node.put("offset", d->offset);
+      node.put("<xmlattr>.name", d->name);
 
       schema_node.add_child("temporal", node);
 
@@ -51,6 +54,7 @@ void generate_xml(TSchema &schema, uint32_t bytes) {
       node.put("index", d->binary_index);
       node.put("bin", d->bins());
       node.put("offset", d->offset);
+      node.put("<xmlattr>.name", d->name);
 
       schema_node.add_child("payload", node);
     }
@@ -298,6 +302,7 @@ TSchema read_xml_schema(const std::string &xml_input) {
 
       // read attributes
       dimension.csv_index = d.second.get("<xmlattr>.index", 0);
+      dimension.name = d.second.get("<xmlattr>.name", "");
 
       auto type = d.second.get("<xmlattr>.type", "discrete");
       if (type == "discrete") {
@@ -351,6 +356,7 @@ TSchema read_xml_schema(const std::string &xml_input) {
 
       // read attributes
       dimension.csv_index = d.second.get("<xmlattr>.index", 0);
+      dimension.name = d.second.get("<xmlattr>.name", "");
 
       for (auto &bins : d.second.get_child("bins", pt::ptree())) {
         // store bin info
@@ -377,6 +383,7 @@ TSchema read_xml_schema(const std::string &xml_input) {
       // read attributes
       dimension.csv_index_lat = d.second.get("<xmlattr>.index-lat", 0);
       dimension.csv_index_lon = d.second.get("<xmlattr>.index-lon", 0);
+      dimension.name = d.second.get("<xmlattr>.name", "");
 
       for (auto &bins : d.second.get_child("bins", pt::ptree())) {
         // store bin info
@@ -400,6 +407,7 @@ TSchema read_xml_schema(const std::string &xml_input) {
 
       // read attributes
       dimension.csv_index = d.second.get("<xmlattr>.index", 0);
+      dimension.name = d.second.get("<xmlattr>.name", "");
 
       for (auto &bins : d.second.get_child("bins", pt::ptree())) {
         // store bin info

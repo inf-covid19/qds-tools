@@ -33,6 +33,7 @@ struct coordinates_t {
 
 template<typename T>
 struct dimesion_t {
+  std::string name;
   uint32_t offset{0};
   uint32_t csv_index{0};
   uint32_t binary_index{0};
