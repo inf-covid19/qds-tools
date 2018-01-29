@@ -4,34 +4,68 @@
     <output>green_tripdata_2013-08</output>
     <output-dir>./output</output-dir>
     <schema>
-        <categorical index="4" type="sequential" name="RateCodeID">
-            <bins>
-                <bin>
-                    <min>1</min>
-                    <max>6</max>
-                </bin>
-            </bins>
-        </categorical>
-
-        <temporal index="1" name="lpep_pickup_datetime">
-            <bins>
-                <bin>
-                    <format>%Y-%m-%d %H:%M:%S</format>
-                    <interval>86400</interval>
-                </bin>
-            </bins>
+        <temporal index="1" name="pickup_datetime">
+            <attributes>
+                <format>%Y-%m-%d %H:%M:%S</format>
+                <interval>86400</interval>
+            </attributes>
         </temporal>
 
-        <spatial index-lat="6" index-lon="5" name-lat="Pickup_latitude" name-lon="Pickup_longitude">
-            <bins>
+        <temporal index="2" name="dropoff_datetime">
+            <attributes>
+                <format>%Y-%m-%d %H:%M:%S</format>
+                <interval>86400</interval>
+            </attributes>
+        </temporal>
+
+        <categorical index="4" type="sequential" name="rate_code_id">
+            <attributes>
+                <min>1</min>
+                <max>6</max>
+            </attributes>
+        </categorical>
+
+        <spatial index-lat="6" index-lon="5" name="pickup">
+            <attributes>
                 <bin>1</bin>
-            </bins>
+            </attributes>
         </spatial>
 
-        <payload index="17" name="Total_amount">
-            <bins>
-                <bin></bin>
-            </bins>
+        <spatial index-lat="8" index-lon="7" name="dropoff">
+            <attributes>
+                <bin>1</bin>
+            </attributes>
+        </spatial>
+
+        <categorical index="9" type="sequential" name="passenger_count">
+            <attributes>
+                <min>1</min>
+                <max>4</max>
+            </attributes>
+        </categorical>
+
+        <payload index="10" name="trip_distance">
+            <attributes>
+                <type>0</type>
+            </attributes>
+        </payload>
+
+        <payload index="11" name="fare_amount">
+            <attributes>
+                <type>0</type>
+            </attributes>
+        </payload>
+
+        <payload index="14" name="tip_amount">
+            <attributes>
+                <type>0</type>
+            </attributes>
+        </payload>
+
+        <payload index="17" name="total_amount">
+            <attributes>
+                <type>0</type>
+            </attributes>
         </payload>
     </schema>
 </config>
