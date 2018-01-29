@@ -21,40 +21,36 @@ void generate_xml(TSchema &schema, uint32_t bytes) {
     if (auto d = std::get_if<TSpatial>(&variant)) {
       pt::ptree node;
 
-      node.put("index", d->binary_index);
-      node.put("bin", d->bins());
+      node.put("index", d->name);
+      node.put("bin", d->bin());
       node.put("offset", d->offset);
-      node.put("<xmlattr>.name", d->name);
 
       schema_node.add_child("spatial", node);
 
     } else if (auto d = std::get_if<TCategorical>(&variant)) {
       pt::ptree node;
 
-      node.put("index", d->binary_index);
-      node.put("bin", d->bins());
+      node.put("index", d->name);
+      node.put("bin", d->bin());
       node.put("offset", d->offset);
-      node.put("<xmlattr>.name", d->name);
 
       schema_node.add_child("categorical", node);
 
     } else if (auto d = std::get_if<TTemporal>(&variant)) {
       pt::ptree node;
 
-      node.put("index", d->binary_index);
-      node.put("bin", d->bins());
+      node.put("index", d->name);
+      node.put("bin", d->bin());
       node.put("offset", d->offset);
-      node.put("<xmlattr>.name", d->name);
 
       schema_node.add_child("temporal", node);
 
     } else if (auto d = std::get_if<TPayload>(&variant)) {
       pt::ptree node;
 
-      node.put("index", d->binary_index);
-      node.put("bin", d->bins());
+      node.put("index", d->name);
+      node.put("bin", d->bin());
       node.put("offset", d->offset);
-      node.put("<xmlattr>.name", d->name);
 
       schema_node.add_child("payload", node);
     }
@@ -252,13 +248,13 @@ void gerenate_from_csv(TSchema &schema) {
   // writer formatted values
   for (auto &variant : schema.dimensions) {
     if (auto d = std::get_if<TSpatial>(&variant)) {
-      binary.write((char *)&d->data[0], d->data.size() * d->bytes());
+      binary.write((char *) &d->data[0], d->data.size() * d->bytes());
     } else if (auto d = std::get_if<TCategorical>(&variant)) {
-      binary.write((char *)&d->data[0], d->data.size() * d->bytes());
+      binary.write((char *) &d->data[0], d->data.size() * d->bytes());
     } else if (auto d = std::get_if<TTemporal>(&variant)) {
-      binary.write((char *)&d->data[0], d->data.size() * d->bytes());
+      binary.write((char *) &d->data[0], d->data.size() * d->bytes());
     } else if (auto d = std::get_if<TPayload>(&variant)) {
-      binary.write((char *)&d->data[0], d->data.size() * d->bytes());
+      binary.write((char *) &d->data[0], d->data.size() * d->bytes());
     }
   }
 
@@ -286,7 +282,6 @@ TSchema read_xml_schema(const std::string &xml_input) {
   auto &cschema = tree.get_child("config.schema");
 
   uint32_t offset = 0;
-  uint32_t binary_index = 0;
 
   for (auto &d : cschema) {
     if (d.first == "categorical") {
@@ -296,9 +291,6 @@ TSchema read_xml_schema(const std::string &xml_input) {
       // offset
       dimension.offset = offset;
       offset += dimension.bytes();
-
-      // binary index
-      dimension.binary_index = binary_index;\
 
       // read attributes
       dimension.csv_index = d.second.get("<xmlattr>.index", 0);
@@ -315,30 +307,33 @@ TSchema read_xml_schema(const std::string &xml_input) {
         dimension.bin_type = TCategorical::SEQUENTIAl;
       }
 
-      for (auto &bins : d.second.get_child("bins", pt::ptree())) {
-        // store bin info
-        if (bins.first == "bin") {
-
-          switch (dimension.bin_type) {
-            case TCategorical::DISCRETE: {
-              dimension.discrete.emplace_back(bins.second.get("key", ""));
-            }
-              break;
-            case TCategorical::RANGE: {
-              dimension.range.emplace_back(bins.second.get("max", 0));
-            }
-              break;
-            case TCategorical::BINARY: {
-              // nothing
-            }
-              break;
-
-            case TCategorical::SEQUENTIAl: {
-              dimension.sequential = std::make_pair(bins.second.get("min", 0), bins.second.get("max", 0));
-            }
-              break;
+      switch (dimension.bin_type) {
+        case TCategorical::DISCRETE: {
+          for (auto &attr : d.second.get_child("attributes", pt::ptree())) {
+            auto bin = attr.second.data();
+            dimension.discrete.emplace_back(bin);
           }
         }
+          break;
+        case TCategorical::RANGE: {
+          for (auto &attr : d.second.get_child("attributes", pt::ptree())) {
+            auto min = attr.second.get("min", 0);
+            auto max = attr.second.get("max", 0);
+            dimension.range.emplace_back(max);
+          }
+        }
+          break;
+        case TCategorical::BINARY: {
+          // nothing
+        }
+          break;
+
+        case TCategorical::SEQUENTIAl: {
+          auto min = d.second.get("attributes.min", 0);
+          auto max = d.second.get("attributes.max", 0);
+          dimension.sequential = std::make_pair(min, max);
+        }
+          break;
       }
 
       schema.dimensions.emplace_back(dimension);
@@ -351,21 +346,12 @@ TSchema read_xml_schema(const std::string &xml_input) {
       dimension.offset = offset;
       offset += dimension.bytes();
 
-      // binary index
-      dimension.binary_index = binary_index;
-
       // read attributes
       dimension.csv_index = d.second.get("<xmlattr>.index", 0);
       dimension.name = d.second.get("<xmlattr>.name", "");
 
-      for (auto &bins : d.second.get_child("bins", pt::ptree())) {
-        // store bin info
-        if (bins.first == "bin") {
-          dimension.interval = std::stoi(bins.second.get("interval", ""));
-
-          dimension.format = bins.second.get("format", "");
-        }
-      }
+      dimension.interval = d.second.get("attributes.interval", 3600);
+      dimension.format = d.second.get("attributes.format", "%d/%m/%Y-%H:%M");
 
       schema.dimensions.emplace_back(dimension);
 
@@ -377,20 +363,12 @@ TSchema read_xml_schema(const std::string &xml_input) {
       dimension.offset = offset;
       offset += dimension.bytes();
 
-      // binary index
-      dimension.binary_index = binary_index;
-
       // read attributes
       dimension.csv_index_lat = d.second.get("<xmlattr>.index-lat", 0);
       dimension.csv_index_lon = d.second.get("<xmlattr>.index-lon", 0);
       dimension.name = d.second.get("<xmlattr>.name", "");
 
-      for (auto &bins : d.second.get_child("bins", pt::ptree())) {
-        // store bin info
-        if (bins.first == "bin") {
-          dimension.bin = bins.second.get("bin", 1);
-        }
-      }
+      dimension.bins = d.second.get("attributes.bin", 0);
 
       schema.dimensions.emplace_back(dimension);
 
@@ -402,24 +380,14 @@ TSchema read_xml_schema(const std::string &xml_input) {
       dimension.offset = offset;
       offset += dimension.bytes();
 
-      // binary index
-      dimension.binary_index = binary_index;
-
       // read attributes
       dimension.csv_index = d.second.get("<xmlattr>.index", 0);
       dimension.name = d.second.get("<xmlattr>.name", "");
 
-      for (auto &bins : d.second.get_child("bins", pt::ptree())) {
-        // store bin info
-        if (bins.first == "bin") {
-          // nothing
-        }
-      }
+      dimension.type = (TPayload::EBinType)d.second.get("attributes.type", 0);
 
       schema.dimensions.emplace_back(dimension);
     }
-
-    ++binary_index;
   }
 
   return schema;

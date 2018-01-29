@@ -36,14 +36,13 @@ struct dimesion_t {
   std::string name;
   uint32_t offset{0};
   uint32_t csv_index{0};
-  uint32_t binary_index{0};
 
   T temporary;
 
   std::vector<T> data;
 
-  virtual inline uint32_t bins() const {
-    return 1;
+  virtual inline uint32_t bin() const {
+    return 0;
   };
 
   virtual inline bool invalid_data(const T &value) {
@@ -57,6 +56,16 @@ struct dimesion_t {
 };
 
 struct TPayload : public dimesion_t<float> {
+  enum EBinType {
+    PDIGEST,
+    GAUSSIAN
+  };
+
+  EBinType type{PDIGEST};
+
+  inline uint32_t bin() const override {
+    return type;
+  }
 };
 
 struct TSpatial : public dimesion_t<coordinates_t> {
@@ -68,10 +77,10 @@ struct TSpatial : public dimesion_t<coordinates_t> {
     };
   };
 
-  uint32_t bin{1};
+  uint32_t bins{1};
 
-  inline uint32_t bins() const override {
-    return bin;
+  inline uint32_t bin() const override {
+    return bins;
   }
 
   inline bool invalid_data(const coordinates_t &value) override {
@@ -90,7 +99,7 @@ struct TTemporal : public dimesion_t<uint32_t> {
   uint32_t interval;
   std::string format;
 
-  inline uint32_t bins() const override {
+  inline uint32_t bin() const override {
     return interval;
   }
 
@@ -123,7 +132,7 @@ struct TCategorical : dimesion_t<uint8_t> {
   // [lower_bound, upper_bound]
   std::pair<uint32_t, uint32_t> sequential;
 
-  inline uint32_t bins() const override {
+  inline uint32_t bin() const override {
     switch (bin_type) {
       case TCategorical::DISCRETE: {
         return discrete.size();
@@ -146,7 +155,7 @@ struct TCategorical : dimesion_t<uint8_t> {
 
   inline bool invalid_data(const uint8_t &value) override {
     temporary = value;
-    if (temporary < 0 || temporary >= bins()) {
+    if (temporary < 0 || temporary >= bin()) {
       return true;
     } else {
       return false;
