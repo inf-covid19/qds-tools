@@ -34,8 +34,9 @@ struct coordinates_t {
 template<typename T>
 struct dimesion_t {
   std::string name;
+  std::string index;
+
   uint32_t offset{0};
-  uint32_t csv_index{0};
 
   T temporary;
 
@@ -69,13 +70,8 @@ struct TPayload : public dimesion_t<float> {
 };
 
 struct TSpatial : public dimesion_t<coordinates_t> {
-  union {
-    uint32_t csv_index{0};
-    struct {
-      uint32_t csv_index_lat : 16;
-      uint32_t csv_index_lon : 16;
-    };
-  };
+  std::string index_lat;
+  std::string index_lon;
 
   uint32_t bins{1};
 
@@ -166,9 +162,9 @@ struct TCategorical : dimesion_t<uint8_t> {
 using TDimension = std::variant<TSpatial, TCategorical, TTemporal, TPayload>;
 
 struct TSchema {
-  uint32_t lines_to_skip{0};
-
   std::string input;
+  std::string input_dir;
+
   std::string output;
   std::string output_dir;
 

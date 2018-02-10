@@ -73,16 +73,10 @@ inline int linearScale(float min, float max, float a, float b, float x) {
   //return value >= b ? (b - 1) : (value < a ? a : value);
 }
 
-// transform csv to binary
-void gerenate_from_csv(TSchema &schema) {
-  BinaryHeader bin_header;
-
-  // sum to record size
-  bin_header.bytes = 0;
-  bin_header.records = 0;
+void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string &file) {
+  std::cout << "log: parsing [" << file << "]" << std::endl;
 
   // source: https://bravenewmethod.com/2016/09/17/quick-and-robust-c-csv-reader-with-boost/
-
   // used to split the file in lines
   const boost::regex linesregx("\\r\\n|\\n\\r|\\n|\\r");
 
@@ -93,15 +87,74 @@ void gerenate_from_csv(TSchema &schema) {
   const bt::ptime timet_start(boost::gregorian::date(1970, 1, 1));
 
   std::string line;
-  std::ifstream infile(schema.input);
+  std::ifstream infile(file);
 
-  // skip csv lines
-  for (auto i = 0; i < schema.lines_to_skip; ++i) {
-    std::getline(infile, line);
+  // read header
+  std::getline(infile, line);
+
+  // split line to tokens
+  boost::sregex_token_iterator header_ti(line.begin(), line.end(), fieldsregx, -1);
+  boost::sregex_token_iterator header_end;
+
+  std::vector<std::string> header(header_ti, header_end);
+
+  std::transform(header.begin(), header.end(), header.begin(), [](const std::string &lhs) {
+    return boost::algorithm::to_lower_copy(lhs);
+  });
+
+  std::unordered_map<std::string, uint32_t> index_map;
+  for (auto &variant : schema.dimensions) {
+
+    if (auto d = std::get_if<TSpatial>(&variant)) {
+      auto it_lat = std::find(header.begin(), header.end(), d->index_lat);
+      auto it_lon = std::find(header.begin(), header.end(), d->index_lon);
+
+      if (it_lat == header.end() || it_lon == header.end()) {
+        std::cerr << "error: invalid spatial column [" << file << "]" << std::endl;
+        return;
+      }
+
+      index_map[(*it_lat)] = it_lat - header.begin();
+      index_map[(*it_lon)] = it_lon - header.begin();
+
+    } else if (auto d = std::get_if<TCategorical>(&variant)) {
+      auto it = std::find(header.begin(), header.end(), d->index);
+
+      if (it == header.end()) {
+        std::cerr << "error: invalid categorical column [" << file << "]" << std::endl;
+        return;
+      }
+
+      index_map[(*it)] = it - header.begin();
+
+    } else if (auto d = std::get_if<TTemporal>(&variant)) {
+      auto it = std::find(header.begin(), header.end(), d->index);
+
+      if (it == header.end()) {
+        std::cerr << "error: invalid temporal column [" << file << "]" << std::endl;
+        return;
+      }
+
+      index_map[(*it)] = it - header.begin();
+
+    } else if (auto d = std::get_if<TPayload>(&variant)) {
+      auto it = std::find(header.begin(), header.end(), d->index);
+
+      if (it == header.end()) {
+        std::cerr << "error: invalid payload column [" << file << "]" << std::endl;
+        return;
+      }
+
+      index_map[(*it)] = it - header.begin();
+    }
   }
 
   while (!infile.eof()) {
     std::getline(infile, line);
+
+    if (line.empty()) {
+      continue;
+    }
 
     try {
       // split line to tokens
@@ -120,40 +173,55 @@ void gerenate_from_csv(TSchema &schema) {
         if (auto d = std::get_if<TSpatial>(&variant)) {
           coordinates_t formated_value;
 
+          if (unformatted_data[index_map[d->index_lat]].empty()) {
+            invalid = true;
+            break;
+          }
+
           // lat
-          formated_value.lat = std::stof(unformatted_data[d->csv_index_lat]);
+          formated_value.lat = std::stof(unformatted_data[index_map[d->index_lat]]);
+
+          if (unformatted_data[index_map[d->index_lon]].empty()) {
+            invalid = true;
+            break;
+          }
 
           // lon -> lat column + 1
-          formated_value.lon = std::stof(unformatted_data[d->csv_index_lon]);
+          formated_value.lon = std::stof(unformatted_data[index_map[d->index_lon]]);
 
           if (invalid = d->invalid_data(formated_value)) {
             break;
           }
 
         } else if (auto d = std::get_if<TCategorical>(&variant)) {
+          if (unformatted_data[index_map[d->index]].empty()) {
+            invalid = true;
+            break;
+          }
+
           uint8_t formated_value;
 
           switch (d->bin_type) {
             case TCategorical::DISCRETE: {
-              auto it = std::find(d->discrete.begin(), d->discrete.end(), unformatted_data[d->csv_index]);
+              auto it = std::find(d->discrete.begin(), d->discrete.end(), unformatted_data[index_map[d->index]]);
               formated_value = it - d->discrete.begin();
             }
               break;
             case TCategorical::RANGE: {
               auto it =
-                  std::lower_bound(d->range.begin(), d->range.end(), std::stof(unformatted_data[d->csv_index]));
+                  std::lower_bound(d->range.begin(), d->range.end(), std::stof(unformatted_data[index_map[d->index]]));
               formated_value = it - d->range.begin();
             }
               break;
 
             case TCategorical::BINARY: {
-              formated_value = std::stoi(unformatted_data[d->csv_index]);
+              formated_value = std::stoi(unformatted_data[index_map[d->index]]);
             }
               break;
 
             case TCategorical::SEQUENTIAl: {
               uint32_t diff = d->sequential.second - d->sequential.first + 1;
-              float rand = std::stof(unformatted_data[d->csv_index]);
+              float rand = std::stof(unformatted_data[index_map[d->index]]);
 
               formated_value = linearScale(d->sequential.first, d->sequential.second + 1, 0, diff, rand);
             }
@@ -165,12 +233,17 @@ void gerenate_from_csv(TSchema &schema) {
           }
 
         } else if (auto d = std::get_if<TTemporal>(&variant)) {
+          if (unformatted_data[index_map[d->index]].empty()) {
+            invalid = true;
+            break;
+          }
+
           uint32_t formated_value;
 
           bt::ptime pt;
           std::locale format(std::locale::classic(), new bt::time_input_facet(d->format.c_str()));
 
-          std::istringstream is(unformatted_data[d->csv_index]);
+          std::istringstream is(unformatted_data[index_map[d->index]]);
           is.imbue(format);
           is >> pt;
 
@@ -183,10 +256,15 @@ void gerenate_from_csv(TSchema &schema) {
           }
 
         } else if (auto d = std::get_if<TPayload>(&variant)) {
+          if (unformatted_data[index_map[d->index]].empty()) {
+            invalid = true;
+            break;
+          }
+
           float formated_value;
 
           // payload
-          formated_value = std::stof(unformatted_data[d->csv_index]);
+          formated_value = std::stof(unformatted_data[index_map[d->index]]);
 
           if (invalid = d->invalid_data(formated_value)) {
             break;
@@ -222,8 +300,30 @@ void gerenate_from_csv(TSchema &schema) {
 
   // close input file
   infile.close();
+}
+
+// transform csv to binary
+void gerenate_from_csv(TSchema &schema) {
+  BinaryHeader bin_header;
+
+  // sum to record size
+  bin_header.bytes = 0;
+  bin_header.records = 0;
+
+  // list all files in folder
+  if (boost::filesystem::is_directory(schema.input_dir)) {
+    std::cout << "log: " << schema.input_dir << " is a directory containing:" << std::endl;
+
+    for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(schema.input_dir), {}))
+      read_csv_file(schema, bin_header, entry.path().string());
+
+  } else if (boost::filesystem::is_regular_file(schema.input)) {
+    read_csv_file(schema, bin_header, schema.input);
+  }
 
   ////////////////////////////////////////////////////////
+  std::cout << "log: writing binary file" << std::endl;
+
   // binary output
   std::ofstream binary(schema.output_dir + "/" + schema.output + ".nds", std::ios::out | std::ios::binary);
 
@@ -242,8 +342,8 @@ void gerenate_from_csv(TSchema &schema) {
   // write binary header
   binary.write((char *) &bin_header, sizeof(BinaryHeader));
 
-  std::cout << "elts_n: " << bin_header.records << std::endl;
-  std::cout << "elts_size: " << bin_header.bytes << std::endl;
+  std::cout << "log: elts_n: " << bin_header.records << std::endl;
+  std::cout << "log: elts_size: " << bin_header.bytes << std::endl;
 
   // writer formatted values
   for (auto &variant : schema.dimensions) {
@@ -273,7 +373,7 @@ TSchema read_xml_schema(const std::string &xml_input) {
   // config
   auto &config = tree.get_child("config");
   schema.input = config.get("input", "");
-  schema.lines_to_skip = config.get("input.<xmlattr>.lines-to-skip", 0);
+  schema.input_dir = config.get("input-dir", "");
 
   schema.output = config.get("output", "output");
   schema.output_dir = config.get("output-dir", "./");
@@ -293,8 +393,13 @@ TSchema read_xml_schema(const std::string &xml_input) {
       offset += dimension.bytes();
 
       // read attributes
-      dimension.csv_index = d.second.get("<xmlattr>.index", 0);
+      dimension.index = boost::algorithm::to_lower_copy(d.second.get("<xmlattr>.index", ""));
       dimension.name = d.second.get("<xmlattr>.name", "");
+
+      if (dimension.index.empty() || dimension.name.empty()) {
+        std::cerr << "error: invalid csv schema" << std::endl;
+        continue;
+      }
 
       auto type = d.second.get("<xmlattr>.type", "discrete");
       if (type == "discrete") {
@@ -347,8 +452,13 @@ TSchema read_xml_schema(const std::string &xml_input) {
       offset += dimension.bytes();
 
       // read attributes
-      dimension.csv_index = d.second.get("<xmlattr>.index", 0);
+      dimension.index = boost::algorithm::to_lower_copy(d.second.get("<xmlattr>.index", ""));
       dimension.name = d.second.get("<xmlattr>.name", "");
+
+      if (dimension.index.empty() || dimension.name.empty()) {
+        std::cerr << "error: invalid csv schema" << std::endl;
+        continue;
+      }
 
       dimension.interval = d.second.get("attributes.interval", 3600);
       dimension.format = d.second.get("attributes.format", "%d/%m/%Y-%H:%M");
@@ -364,9 +474,14 @@ TSchema read_xml_schema(const std::string &xml_input) {
       offset += dimension.bytes();
 
       // read attributes
-      dimension.csv_index_lat = d.second.get("<xmlattr>.index-lat", 0);
-      dimension.csv_index_lon = d.second.get("<xmlattr>.index-lon", 0);
+      dimension.index_lat = boost::algorithm::to_lower_copy(d.second.get("<xmlattr>.index-lat", ""));
+      dimension.index_lon = boost::algorithm::to_lower_copy(d.second.get("<xmlattr>.index-lon", ""));
       dimension.name = d.second.get("<xmlattr>.name", "");
+
+      if (dimension.index_lat.empty() || dimension.index_lon.empty() || dimension.name.empty()) {
+        std::cerr << "error: invalid csv schema" << std::endl;
+        continue;
+      }
 
       dimension.bins = d.second.get("attributes.bin", 0);
 
@@ -381,10 +496,15 @@ TSchema read_xml_schema(const std::string &xml_input) {
       offset += dimension.bytes();
 
       // read attributes
-      dimension.csv_index = d.second.get("<xmlattr>.index", 0);
+      dimension.index = boost::algorithm::to_lower_copy(d.second.get("<xmlattr>.index", ""));
       dimension.name = d.second.get("<xmlattr>.name", "");
 
-      dimension.type = (TPayload::EBinType)d.second.get("attributes.type", 0);
+      if (dimension.index.empty() || dimension.name.empty()) {
+        std::cerr << "error: invalid csv schema" << std::endl;
+        continue;
+      }
+
+      dimension.type = (TPayload::EBinType) d.second.get("attributes.type", 0);
 
       schema.dimensions.emplace_back(dimension);
     }
