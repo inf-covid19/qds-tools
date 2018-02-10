@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config ver="1.0">
-    <input-dir>/home/cicerolp/green_tripdata_2013</input-dir>
-    <output>green_tripdata_2013</output>
+    <input-dir>/home/cicerolp/green_tripdata_2016</input-dir>
+    <output>green_tripdata_2016</output>
     <output-dir>./output</output-dir>
     <schema>
         <temporal index="lpep_pickup_datetime" name="pickup_datetime">
