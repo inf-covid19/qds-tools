@@ -18,12 +18,15 @@
             </attributes>
         </categorical>
 
-        <categorical index="payment_type" type="sequential" name="payment_type">
-            <attributes>
-                <min>1</min>
-                <max>6</max>
-            </attributes>
-        </categorical>
+        <categorical index="payment_type" type="discrete" name="payment_type">
+        <attributes>
+            <bin>CRD</bin>
+            <bin>CSH</bin>
+            <bin>NOC</bin>
+            <bin>DIS</bin>
+            <bin>Voided trip</bin>
+            <bin>UNK</bin>
+        </attributes>
 
         <spatial index-lat="pickup_latitude" index-lon="pickup_longitude" name="pickup">
             <attributes>

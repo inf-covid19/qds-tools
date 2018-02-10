@@ -168,6 +168,13 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
         continue;
       }
 
+      std::transform(unformatted_data.begin(),
+                     unformatted_data.end(),
+                     unformatted_data.begin(),
+                     [](const std::string &lhs) {
+                       return boost::algorithm::to_lower_copy(lhs);
+                     });
+
       bool invalid = false;
       for (auto &variant : schema.dimensions) {
         if (auto d = std::get_if<TSpatial>(&variant)) {
@@ -274,6 +281,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
 
       // invalid unformatted data
       if (invalid) {
+        std::cout << line << std::endl;
         continue;
       }
 
@@ -416,7 +424,7 @@ TSchema read_xml_schema(const std::string &xml_input) {
         case TCategorical::DISCRETE: {
           for (auto &attr : d.second.get_child("attributes", pt::ptree())) {
             auto bin = attr.second.data();
-            dimension.discrete.emplace_back(bin);
+            dimension.discrete.emplace_back(boost::algorithm::to_lower_copy(bin));
           }
         }
           break;

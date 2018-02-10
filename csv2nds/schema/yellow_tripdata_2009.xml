@@ -18,10 +18,14 @@
             </attributes>
         </categorical>
 
-        <categorical index="Payment_Type" type="sequential" name="payment_type">
+        <categorical index="Payment_Type" type="discrete" name="payment_type">
             <attributes>
-                <min>1</min>
-                <max>6</max>
+                <bin>Credit</bin>
+                <bin>Cash</bin>
+                <bin>No Charge</bin>
+                <bin>Dispute</bin>
+                <bin>Voided trip</bin>
+                <bin>Unknown</bin>
             </attributes>
         </categorical>
 
