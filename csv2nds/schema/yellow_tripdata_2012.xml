@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config ver="1.0">
-    <input-dir>/home/cicerolp/data/yellow_tripdata_2012</input-dir>
+    <input-dir>./yellow_tripdata_2012</input-dir>
     <output>yellow_tripdata_2012</output>
     <output-dir>./output</output-dir>
     <schema>
