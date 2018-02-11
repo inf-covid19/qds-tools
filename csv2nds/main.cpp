@@ -74,6 +74,21 @@ inline int linearScale(float min, float max, float a, float b, float x) {
 }
 
 void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string &file) {
+  size_t num_lines = 0;
+
+  // open file
+  std::string line;
+  std::ifstream infile(file);
+
+  // count number of lines
+  while (std::getline(infile, line)) {
+    ++num_lines;
+  }
+
+  // reset file
+  infile.clear();
+  infile.seekg(0, std::ios::beg);
+
   std::cout << "log: parsing [" << file << "]" << std::endl;
 
   // source: https://bravenewmethod.com/2016/09/17/quick-and-robust-c-csv-reader-with-boost/
@@ -85,9 +100,6 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
 
   namespace bt = boost::posix_time;
   const bt::ptime timet_start(boost::gregorian::date(1970, 1, 1));
-
-  std::string line;
-  std::ifstream infile(file);
 
   // read header
   std::getline(infile, line);
@@ -149,6 +161,25 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
     }
   }
 
+  // reserve memory
+  for (auto &variant : schema.dimensions) {
+    if (auto d = std::get_if<TSpatial>(&variant)) {
+      d->data.reserve(d->data.size() + num_lines);
+    } else if (auto d = std::get_if<TCategorical>(&variant)) {
+      d->data.reserve(d->data.size() + num_lines);
+    } else if (auto d = std::get_if<TTemporal>(&variant)) {
+      d->data.reserve(d->data.size() + num_lines);
+    } else if (auto d = std::get_if<TPayload>(&variant)) {
+      d->data.reserve(d->data.size() + num_lines);
+    }
+  }
+
+  // formated templates
+  coordinates_t formated_spatial;
+  uint8_t formated_categorical;
+  uint32_t formated_temporal;
+  float formated_payload;
+
   while (!infile.eof()) {
     std::getline(infile, line);
 
@@ -178,25 +209,21 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
       bool invalid = false;
       for (auto &variant : schema.dimensions) {
         if (auto d = std::get_if<TSpatial>(&variant)) {
-          coordinates_t formated_value;
-
           if (unformatted_data[index_map[d->index_lat]].empty()) {
+            invalid = true;
+            break;
+          } else if (unformatted_data[index_map[d->index_lon]].empty()) {
             invalid = true;
             break;
           }
 
           // lat
-          formated_value.lat = std::stof(unformatted_data[index_map[d->index_lat]]);
+          formated_spatial.lat = std::stof(unformatted_data[index_map[d->index_lat]]);
 
-          if (unformatted_data[index_map[d->index_lon]].empty()) {
-            invalid = true;
-            break;
-          }
+          // lon
+          formated_spatial.lon = std::stof(unformatted_data[index_map[d->index_lon]]);
 
-          // lon -> lat column + 1
-          formated_value.lon = std::stof(unformatted_data[index_map[d->index_lon]]);
-
-          if (invalid = d->invalid_data(formated_value)) {
+          if (invalid = d->invalid_data(formated_spatial)) {
             break;
           }
 
@@ -206,23 +233,21 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
             break;
           }
 
-          uint8_t formated_value;
-
           switch (d->bin_type) {
             case TCategorical::DISCRETE: {
               auto it = std::find(d->discrete.begin(), d->discrete.end(), unformatted_data[index_map[d->index]]);
-              formated_value = it - d->discrete.begin();
+              formated_categorical = it - d->discrete.begin();
             }
               break;
             case TCategorical::RANGE: {
               auto it =
                   std::lower_bound(d->range.begin(), d->range.end(), std::stof(unformatted_data[index_map[d->index]]));
-              formated_value = it - d->range.begin();
+              formated_categorical = it - d->range.begin();
             }
               break;
 
             case TCategorical::BINARY: {
-              formated_value = std::stoi(unformatted_data[index_map[d->index]]);
+              formated_categorical = std::stoi(unformatted_data[index_map[d->index]]);
             }
               break;
 
@@ -230,12 +255,12 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
               uint32_t diff = d->sequential.second - d->sequential.first + 1;
               float rand = std::stof(unformatted_data[index_map[d->index]]);
 
-              formated_value = linearScale(d->sequential.first, d->sequential.second + 1, 0, diff, rand);
+              formated_categorical = linearScale(d->sequential.first, d->sequential.second + 1, 0, diff, rand);
             }
               break;
           }
 
-          if (invalid = d->invalid_data(formated_value)) {
+          if (invalid = d->invalid_data(formated_categorical)) {
             break;
           }
 
@@ -245,20 +270,17 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
             break;
           }
 
-          uint32_t formated_value;
-
           bt::ptime pt;
-          std::locale format(std::locale::classic(), new bt::time_input_facet(d->format.c_str()));
 
           std::istringstream is(unformatted_data[index_map[d->index]]);
-          is.imbue(format);
+          is.imbue(d->format);
           is >> pt;
 
           bt::time_duration diff = pt - timet_start;
 
-          formated_value = diff.total_seconds();
+          formated_temporal = diff.total_seconds();
 
-          if (invalid = d->invalid_data(formated_value)) {
+          if (invalid = d->invalid_data(formated_temporal)) {
             break;
           }
 
@@ -268,12 +290,10 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
             break;
           }
 
-          float formated_value;
-
           // payload
-          formated_value = std::stof(unformatted_data[index_map[d->index]]);
+          formated_payload = std::stof(unformatted_data[index_map[d->index]]);
 
-          if (invalid = d->invalid_data(formated_value)) {
+          if (invalid = d->invalid_data(formated_payload)) {
             break;
           }
         }
@@ -281,7 +301,6 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
 
       // invalid unformatted data
       if (invalid) {
-        std::cout << line << std::endl;
         continue;
       }
 
@@ -469,7 +488,11 @@ TSchema read_xml_schema(const std::string &xml_input) {
       }
 
       dimension.interval = d.second.get("attributes.interval", 3600);
-      dimension.format = d.second.get("attributes.format", "%d/%m/%Y-%H:%M");
+
+      std::string format_str = d.second.get("attributes.format", "%d/%m/%Y-%H:%M");
+
+      namespace bt = boost::posix_time;
+      dimension.format = std::locale(std::locale::classic(), new bt::time_input_facet(format_str.c_str()));
 
       schema.dimensions.emplace_back(dimension);
 
