@@ -19,14 +19,15 @@
         </categorical>
 
         <categorical index="payment_type" type="discrete" name="payment_type">
-        <attributes>
-            <bin>CRD</bin>
-            <bin>CSH</bin>
-            <bin>NOC</bin>
-            <bin>DIS</bin>
-            <bin>Voided trip</bin>
-            <bin>Unknown</bin>
-        </attributes>
+            <attributes>
+                <bin>CRD</bin>
+                <bin>CSH</bin>
+                <bin>NOC</bin>
+                <bin>DIS</bin>
+                <bin>Voided trip</bin>
+                <bin>Unknown</bin>
+            </attributes>
+        </categorical>
 
         <spatial index-lat="pickup_latitude" index-lon="pickup_longitude" name="pickup">
             <attributes>

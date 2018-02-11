@@ -105,7 +105,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
   std::getline(infile, line);
 
   // split line to tokens
-  boost::sregex_token_iterator header_ti(line.begin(), line.end(), fieldsregx, -1);
+  boost::sregex_token_iterator header_ti(line.begin(), line.end() - 1, fieldsregx, -1);
   boost::sregex_token_iterator header_end;
 
   std::vector<std::string> header(header_ti, header_end);
