@@ -181,7 +181,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
 
   // formated templates
   coordinates_t formated_spatial;
-  uint8_t formated_categorical;
+  uint16_t formated_categorical;
   uint32_t formated_temporal;
   float formated_payload;
 

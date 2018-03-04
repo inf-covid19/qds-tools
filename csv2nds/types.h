@@ -109,7 +109,7 @@ struct TTemporal : public dimesion_t<uint32_t> {
   }
 };
 
-struct TCategorical : dimesion_t<uint8_t> {
+struct TCategorical : dimesion_t<uint16_t> {
   enum EBinType {
     DISCRETE,
     RANGE,
@@ -149,7 +149,7 @@ struct TCategorical : dimesion_t<uint8_t> {
     }
   }
 
-  inline bool invalid_data(const uint8_t &value) override {
+  inline bool invalid_data(const uint16_t &value) override {
     temporary = value;
     if (temporary < 0 || temporary >= bin()) {
       return true;
