@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set +e
+
 INPUT_DIR=tripdata
 DATASET=green
 
@@ -9,12 +11,12 @@ for year in {2013..2017}; do
 
         mkdir -p ${DATASET}_tripdata_${year}
 
-        rm -R mkdir ${DATASET}_tripdata_${year}
+        rm -R ${DATASET}_tripdata_${year}
 
         mkdir -p ${DATASET}_tripdata_${year}
 
         # move files
-        cp "${INPUT_DIR}/*_${year}-${month}.csv" ${DATASET}_tripdata_${year}/
+        cp "${INPUT_DIR}/${DATASET}_tripdata_${year}-${month}.csv" ${DATASET}_tripdata_${year}/
 
         # run
         ./csv2nds -i ./schema/${DATASET}_tripdata_${year}.xml
@@ -33,12 +35,12 @@ for year in {2009..2017}; do
 
         mkdir -p ${DATASET}_tripdata_${year}
 
-        rm -R mkdir ${DATASET}_tripdata_${year}
+        rm -R ${DATASET}_tripdata_${year}
 
         mkdir -p ${DATASET}_tripdata_${year}
 
         # move files
-        cp "${INPUT_DIR}/*_${year}-${month}.csv" ${DATASET}_tripdata_${year}/
+        cp "${INPUT_DIR}/${DATASET}_tripdata_${year}-${month}.csv" ${DATASET}_tripdata_${year}/
 
         # run
         ./csv2nds -i ./schema/${DATASET}_tripdata_${year}.xml
