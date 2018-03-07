@@ -73,7 +73,7 @@ inline int linearScale(float min, float max, float a, float b, float x) {
   //return value >= b ? (b - 1) : (value < a ? a : value);
 }
 
-void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string &file) {
+void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string &file, const std::string &sep) {
   size_t num_lines = 0;
 
   // open file
@@ -96,7 +96,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
   const boost::regex linesregx("\\r\\n|\\n\\r|\\n|\\r");
 
   // used to split each line to tokens, assuming ',' as column separator
-  const boost::regex fieldsregx(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+  const boost::regex fieldsregx(sep + "(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
 
   namespace bt = boost::posix_time;
   const bt::ptime timet_start(boost::gregorian::date(1970, 1, 1));
@@ -335,7 +335,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
 }
 
 // transform csv to binary
-void gerenate_from_csv(TSchema &schema) {
+void gerenate_from_csv(TSchema &schema, const std::string &sep) {
   BinaryHeader bin_header;
 
   // sum to record size
@@ -347,10 +347,10 @@ void gerenate_from_csv(TSchema &schema) {
     std::cout << "log: " << schema.input_dir << " is a directory containing:" << std::endl;
 
     for (auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(schema.input_dir), {}))
-      read_csv_file(schema, bin_header, entry.path().string());
+      read_csv_file(schema, bin_header, entry.path().string(), sep);
 
   } else if (boost::filesystem::is_regular_file(schema.input)) {
-    read_csv_file(schema, bin_header, schema.input);
+    read_csv_file(schema, bin_header, schema.input, sep);
   }
 
   ////////////////////////////////////////////////////////
@@ -551,12 +551,16 @@ TSchema read_xml_schema(const std::string &xml_input) {
 
 int main(int argc, char *argv[]) {
   std::string xml_input = "schema.xml";
+  std::string sep = ",";
 
   // declare the supported options
   po::options_description desc("Command Line Arguments");
 
   desc.add_options()("input,i", po::value<std::string>(&xml_input)->default_value(xml_input),
                      "xml input file");
+
+  desc.add_options()("sep,s", po::value<std::string>(&sep)->default_value(sep),
+                     "csv separator");
 
   po::variables_map vm;
   po::store(po::command_line_parser(argc, argv).options(desc).run(), vm);
@@ -566,7 +570,7 @@ int main(int argc, char *argv[]) {
 
   auto schema = read_xml_schema(xml_input);
 
-  gerenate_from_csv(schema);
+  gerenate_from_csv(schema, sep);
 
   return 0;
 }
