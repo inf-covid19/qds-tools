@@ -68,7 +68,7 @@ void generate_xml(TSchema &schema, uint32_t bytes) {
   output_xml.close();
 }
 
-inline int linearScale(float min, float max, float a, float b, float x) {
+inline int linearScale(double min, double max, double a, double b, double x) {
   return std::floor((((b - a) * (x - min)) / (max - min)) + a);
   //return value >= b ? (b - 1) : (value < a ? a : value);
 }
