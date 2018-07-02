@@ -4,7 +4,7 @@
 // from http://howardhinnant.github.io/date_algorithms.html
 
 namespace date_util {
-   // Returns number of days since civil 1970-01-01.  Negative values indicate
+   // Returns number of days since civil 1970-01-01.  Negative key indicate
    //    days prior to 1970-01-01.
    // Preconditions:  y-m-d represents a date in the civil (Gregorian) calendar
    //                 m is in [1, 12]
