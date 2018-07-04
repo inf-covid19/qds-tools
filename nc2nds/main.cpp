@@ -62,7 +62,10 @@ inline void nanocubes_log_fields(const Nanocube &cube, std::string &query, const
   }
 }
 
-void nanocubes_log(const std::vector<std::string> &files) {
+void nanocubes_log(const std::string &filter,
+                   const std::vector<std::string> &files,
+                   const std::string &aggr,
+                   const std::string &options) {
   Nanocube flights, brightkite, gowalla, twitter;
 
   // flights
@@ -194,8 +197,14 @@ void nanocubes_log(const std::vector<std::string> &files) {
 
         if (url.size() < 12) continue;
 
+        if (filter != "*" && filter != nanocubes[url[4]].instance) continue;
+
         query += "/dataset=" + nanocubes[url[4]].instance;
-        query += "/aggr=count";
+        query += "/aggr=" + aggr;
+
+        if (options.size()) {
+          query += "." + options;
+        }
 
         if (url[5] == "tile") {
           // [dimension_name].tile.([x]:[y]:[z]:[resolution])
@@ -254,21 +263,45 @@ void nanocubes_log(const std::vector<std::string> &files) {
 }
 
 int main(int argc, char *argv[]) {
+  namespace po = boost::program_options;
+
+  std::string filter = "*";
+
+  std::string aggr = "count";
+  std::string aggr_options;
   std::vector<std::string> files;
 
-  if (argc < 2) {
-    std::cerr << "error: invalid argument" << std::endl;
-    exit(-1);
-  } else {
-    for (int i = 1; i < argc; i++) {
+  // Declare the supported options.
+  po::options_description desc("\nCommand Line Arguments");
 
-      std::string arg = argv[i];
+  desc.add_options()("filter,f", po::value<std::string>(&filter)->default_value(filter), "filter");
 
-      files.emplace_back(argv[i]);
-    }
+  desc.add_options()("aggr,a", po::value<std::string>(&aggr)->default_value(aggr), "aggregation");
+
+  desc.add_options()("options,o",
+                     po::value<std::string>(&aggr_options)->default_value(aggr_options),
+                     "aggregation options");
+
+  desc.add_options()("input,i",
+                     po::value<std::vector<std::string>>(&files)
+                         ->default_value(std::vector<std::string>(1, "./data.csv"), "./data.csv")
+                         ->composing(),
+                     "input files");
+
+  po::positional_options_description p;
+
+  po::variables_map vm;
+  po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
+  po::notify(vm);
+
+  if (vm.count("help")) {
+    std::cout << desc << std::endl;
+    exit(0);
   }
 
-  nanocubes_log(files);
+  if (files.size()) {
+    nanocubes_log(filter, files, aggr, aggr_options);
+  }
 
   return 0;
 }

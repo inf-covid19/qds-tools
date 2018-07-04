@@ -21,3 +21,11 @@
 #include <functional>
 #include <unordered_set>
 #include <unordered_map>
+
+// boost library
+#include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/tokenizer.hpp>
+#include <boost/program_options.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
