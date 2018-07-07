@@ -94,6 +94,7 @@ struct TSpatial : public dimesion_t<coordinates_t> {
 
 struct TTemporal : public dimesion_t<uint32_t> {
   uint32_t interval;
+  bool unix_time{false};
   std::locale format;
 
   inline uint32_t bin() const override {

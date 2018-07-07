@@ -74,6 +74,8 @@ inline int linearScale(double min, double max, double a, double b, double x) {
 }
 
 void read_dmp_file(TSchema &schema, BinaryHeader &bin_header, const std::string &file) {
+  std::cout << "log: parsing [" << file << "]" << std::endl;
+
   namespace bt = boost::posix_time;
   const bt::ptime timet_start(boost::gregorian::date(1970, 1, 1));
 
@@ -152,24 +154,25 @@ void read_dmp_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
           }
 
         } else if (auto d = std::get_if<TTemporal>(&variant)) {
-
-          /* time_t time(record.time);
-          struct tm *ptm = std::gmtime(&time);
-
-          generator.addInt("tseries", util::mkgmtime(ptm)); */
-
           uint64_t raw = 0;
           std::memcpy(&raw, &dmp_record[d->index], d->size);
 
-          bt::ptime pt;
+          if (d->unix_time) {
+            time_t time(raw);
+            struct tm *ptm = std::gmtime(&time);
 
-          std::istringstream is(std::to_string(raw));
-          is.imbue(d->format);
-          is >> pt;
+            formated_temporal = date_util::mkgmtime(ptm);
+          } else {
+            bt::ptime pt;
 
-          bt::time_duration diff = pt - timet_start;
+            std::istringstream is(std::to_string(raw));
+            is.imbue(d->format);
+            is >> pt;
 
-          formated_temporal = diff.total_seconds();
+            bt::time_duration diff = pt - timet_start;
+
+            formated_temporal = diff.total_seconds();
+          }
 
           if (invalid = d->invalid_data(formated_temporal)) {
             break;
@@ -616,8 +619,12 @@ TSchema read_xml_schema(const std::string &xml_input) {
 
       std::string format_str = d.second.get("attributes.format", "%d/%m/%Y-%H:%M");
 
-      namespace bt = boost::posix_time;
-      dimension.format = std::locale(std::locale::classic(), new bt::time_input_facet(format_str.c_str()));
+      if (format_str == "%UNIX") {
+        dimension.unix_time = true;
+      } else {
+        namespace bt = boost::posix_time;
+        dimension.format = std::locale(std::locale::classic(), new bt::time_input_facet(format_str.c_str()));
+      }
 
       schema.dimensions.emplace_back(dimension);
 

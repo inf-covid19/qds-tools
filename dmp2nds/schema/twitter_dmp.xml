@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config ver="1.0">
-    <input-dir lines-to-skip="32">./twitter_dmp</input-dir>
-    <output>twitter_dmp</output>
+    <input-dir lines-to-skip="32">./twitter-dmp</input-dir>
+    <output>twitter</output>
     <output-dir>./output</output-dir>
     <schema>
-        <categorical offset="14" bytes="1" type="sequential" name="app">
+        <categorical offset="18" bytes="1" type="sequential" name="app">
             <attributes>
                 <min>0</min>
                 <max>3</max>
             </attributes>
         </categorical>
 
-        <categorical offset="13" bytes="1" type="sequential" name="device">
+        <categorical offset="17" bytes="1" type="sequential" name="device">
             <attributes>
                 <min>0</min>
                 <max>4</max>
             </attributes>
         </categorical>
 
-        <categorical offset="12" bytes="1" type="sequential" name="language">
+        <categorical offset="16" bytes="1" type="sequential" name="language">
             <attributes>
                 <min>0</min>
                 <max>14</max>
@@ -27,7 +27,7 @@
 
         <temporal offset="8" bytes="8" name="time">
             <attributes>
-                <format>%Y-%m-%d %H:%M:%S</format>
+                <format>%UNIX</format>
                 <interval>86400</interval>
             </attributes>
         </temporal>
