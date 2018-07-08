@@ -252,11 +252,12 @@ void nanocubes_log(const std::string &filter,
             else if (url[12] == "tseries") nanocubes_log_tseries(nanocubes[url[4]], query, url[13], url[14]);
           }
         }
+
+        std::cout << query << std::endl;
+
       } catch (const std::invalid_argument &e) {
         std::cerr << "error: invalid nanocubes query [" << e.what() << "]" << std::endl;
       }
-
-      std::cout << query << std::endl;
     }
     infile.close();
   }
