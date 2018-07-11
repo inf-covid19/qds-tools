@@ -224,6 +224,8 @@ void nanocubes_log(const std::string &filter,
 
           if (url.size() > 12) nanocubes_log_fields(nanocubes[url[4]], query, url[12]);
 
+          query += "/group=" + nanocubes[url[4]].spatial;
+
         } else if (url[5] == "query") {
           // [dimension_name].region.([x0]:[y0]:[x1]:[y1]:[z])
 
