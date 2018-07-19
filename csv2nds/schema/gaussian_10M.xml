@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config ver="1.0">
-    <input lines-to-skip="0">/home/cicerolp/git/nds-data/gaussian.csv</input>
-    <output>gaussian</output>
+    <input lines-to-skip="0">/home/cicerolp/git/nds-data/gaussian_10M.csv</input>
+    <output>gaussian_10M</output>
     <output-dir>./output</output-dir>
     <schema>
         <temporal index="t" name="date">
