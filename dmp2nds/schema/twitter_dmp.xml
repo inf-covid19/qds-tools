@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config ver="1.0">
+    <input-dir lines-to-skip="32">./twitter-dmp</input-dir>
+    <output>twitter</output>
+    <output-dir>./output</output-dir>
+    <schema>
+        <categorical offset="18" bytes="1" type="sequential" name="app">
+            <attributes>
+                <min>0</min>
+                <max>3</max>
+            </attributes>
+        </categorical>
+
+        <categorical offset="17" bytes="1" type="sequential" name="device">
+            <attributes>
+                <min>0</min>
+                <max>4</max>
+            </attributes>
+        </categorical>
+
+        <categorical offset="16" bytes="1" type="sequential" name="language">
+            <attributes>
+                <min>0</min>
+                <max>14</max>
+            </attributes>
+        </categorical>
+
+        <temporal offset="8" bytes="8" name="time">
+            <attributes>
+                <format>%UNIX</format>
+                <interval>86400</interval>
+            </attributes>
+        </temporal>
+
+        <spatial offset-lat="0" offset-lon="4" bytes="4" name="coord">
+            <attributes>
+                <bin>1</bin>
+            </attributes>
+        </spatial>
+    </schema>
+</config>

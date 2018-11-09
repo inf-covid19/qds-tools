@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config ver="1.0">
+    <input lines-to-skip="1">./data/example.csv</input>
+    <output>example</output>
+    <output-dir>./output</output-dir>
+    <schema>
+        <categorical index="0" type="discrete" name="gender">
+            <attributes>
+                <bin>M</bin>
+                <bin>F</bin>
+            </attributes>
+        </categorical>
+
+        <categorical index="1" type="range" name="age">
+            <attributes>
+                <bin>
+                    <min>0</min>
+                    <max>20</max>
+                </bin>
+                <bin>
+                    <min>21</min>
+                    <max>30</max>
+                </bin>
+                <bin>
+                    <min>31</min>
+                    <max>40</max>
+                </bin>
+                <bin>
+                    <min>41</min>
+                    <max>50</max>
+                </bin>
+                <bin>
+                    <min>51</min>
+                    <max>60</max>
+                </bin>
+                <bin>
+                    <min>61</min>
+                    <max>70</max>
+                </bin>
+            </attributes>
+        </categorical>
+
+        <categorical index="2" type="binary" name="status">
+        </categorical>
+
+
+        <categorical index="3" type="sequential" name="origin">
+            <attributes>
+                <min>0</min>
+                <max>9</max>
+            </attributes>
+        </categorical>
+
+        <temporal index="4" name="date">
+            <attributes>
+                <format>%d/%m/%Y-%H:%M</format>
+                <interval>86400</interval>
+            </attributes>
+        </temporal>
+
+        <spatial index-lat="5" index-lon="6" name="coord">
+            <attributes>
+                <bin>1</bin>
+            </attributes>
+        </spatial>
+    </schema>
+</config>

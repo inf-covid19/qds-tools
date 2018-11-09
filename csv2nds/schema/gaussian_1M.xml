@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config ver="1.0">
+    <input lines-to-skip="0">/home/cicerolp/git/nds-data/gaussian_1M.csv</input>
+    <output>gaussian_1M</output>
+    <output-dir>./output</output-dir>
+    <schema>
+        <temporal index="t" name="date">
+            <attributes>
+                <format>%a %b %e %H:%M:%S %Y</format>
+                <interval>3600</interval>
+            </attributes>
+        </temporal>
+        <spatial index-lat="y" index-lon="x" name="coord">
+            <attributes>
+                <bin>1</bin>
+            </attributes>
+        </spatial>
+        <payload index="z" name="gaussian">
+            <attributes>
+                <type>0</type>
+            </attributes>
+        </payload>
+    </schema>
+</config>
