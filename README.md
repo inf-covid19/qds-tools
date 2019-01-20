@@ -18,8 +18,8 @@ In recent years sophisticated data structures based on datacubes have been propo
 * CSV2NDS
   * Converts CSV data into NDS binary and xml data. Used by the QDS server.
 * DMP2NDS
-  * Converts `.DMP` formatted data into NDS data. The `.DMP` format was used by an older version of Nanocubes[http://www.nanocubes.net/].
+  * Converts `.DMP` formatted data into NDS data. The `.DMP` format was used by an older version of [Nanocubes](http://www.nanocubes.net/).
 * HCF2NDS
-  * Converts Hashedcubes[https://github.com/cicerolp/hashedcubes] data into NDS data.
+  * Converts [Hashedcubes](https://github.com/cicerolp/hashedcubes) data into NDS data.
 * NC2NDS
-  * Converts Nanocubes queries to QDS queries.
+  * Converts [Nanocubes](http://www.nanocubes.net/) queries to QDS queries.
