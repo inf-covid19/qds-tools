@@ -12,3 +12,14 @@
 Real-Time Exploration of Large Spatiotemporal Datasets based on Order Statistics
 
 In recent years sophisticated data structures based on datacubes have been proposed to perform interactive visual exploration of large datasets. While powerful, these approaches overlook the important fact that aggregations used to produce datacubes do not represent the actual distribution of the data being analyzed. As a result, these methods might produce biased results as well as hide important features in the data. In this paper, we introduce the Quantile Datacube Structure (QDS) that bridges this gap by supporting interactive visual exploration based on order statistics. The idea behind our method is that while it is not possible to exactly store order statistics in a datacube it is indeed possible to do it approximately. To achieve this, QDS makes use of an efficient non-parametric distribution approximation scheme called p-digest. Furthermore, QDS employs a novel datacube indexing scheme that reduces the memory usage of previous datacube methods. This enables interactive slicing and dicing while accurately approximating the distribution of quantitative variables of interest. We present two case studies that illustrate the ability of QDS to not only build order statistics based visualizations interactively but also to perform event detection on datasets with up to hundreds of millions of records in real-time. Finally, we present extensive experimental results that validate the effectiveness of QDS regarding memory usage and accuracy in the approximation of order statistics for real-world datasets.
+
+# Tools
+
+* CSV2NDS
+  * Converts CSV data into NDS binary and xml data. Used by the QDS server.
+* DMP2NDS
+  * Converts `.DMP` formatted data into NDS data. The `.DMP` format was used by an older version of Nanocubes[http://www.nanocubes.net/].
+* HCF2NDS
+  * Converts Hashedcubes[https://github.com/cicerolp/hashedcubes] data into NDS data.
+* NC2NDS
+  * Converts Nanocubes queries to QDS queries.
