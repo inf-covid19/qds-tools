@@ -159,7 +159,7 @@ struct TCategorical : dimesion_t<uint16_t> {
   }
 };
 
-using TDimension = std::variant<TSpatial, TCategorical, TTemporal, TPayload>;
+using TDimension = boost::variant<TSpatial, TCategorical, TTemporal, TPayload>;
 
 struct TSchema {
   std::string input;

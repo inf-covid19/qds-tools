@@ -18,7 +18,7 @@ void generate_xml(TSchema &schema, uint32_t bytes) {
   pt::ptree schema_node;
 
   for (auto &variant : schema.dimensions) {
-    if (auto d = std::get_if<TSpatial>(&variant)) {
+    if (auto d = boost::get<TSpatial>(&variant)) {
       pt::ptree node;
 
       node.put("index", d->name);
@@ -27,7 +27,7 @@ void generate_xml(TSchema &schema, uint32_t bytes) {
 
       schema_node.add_child("spatial", node);
 
-    } else if (auto d = std::get_if<TCategorical>(&variant)) {
+    } else if (auto d = boost::get<TCategorical>(&variant)) {
       pt::ptree node;
 
       node.put("index", d->name);
@@ -36,7 +36,7 @@ void generate_xml(TSchema &schema, uint32_t bytes) {
 
       schema_node.add_child("categorical", node);
 
-    } else if (auto d = std::get_if<TTemporal>(&variant)) {
+    } else if (auto d = boost::get<TTemporal>(&variant)) {
       pt::ptree node;
 
       node.put("index", d->name);
@@ -45,7 +45,7 @@ void generate_xml(TSchema &schema, uint32_t bytes) {
 
       schema_node.add_child("temporal", node);
 
-    } else if (auto d = std::get_if<TPayload>(&variant)) {
+    } else if (auto d = boost::get<TPayload>(&variant)) {
       pt::ptree node;
 
       node.put("index", d->name);
@@ -117,7 +117,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
   std::unordered_map<std::string, uint32_t> index_map;
   for (auto &variant : schema.dimensions) {
 
-    if (auto d = std::get_if<TSpatial>(&variant)) {
+    if (auto d = boost::get<TSpatial>(&variant)) {
       auto it_lat = std::find(header.begin(), header.end(), d->index_lat);
       auto it_lon = std::find(header.begin(), header.end(), d->index_lon);
 
@@ -129,7 +129,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
       index_map[(*it_lat)] = it_lat - header.begin();
       index_map[(*it_lon)] = it_lon - header.begin();
 
-    } else if (auto d = std::get_if<TCategorical>(&variant)) {
+    } else if (auto d = boost::get<TCategorical>(&variant)) {
       auto it = std::find(header.begin(), header.end(), d->index);
 
       if (it == header.end()) {
@@ -139,7 +139,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
 
       index_map[(*it)] = it - header.begin();
 
-    } else if (auto d = std::get_if<TTemporal>(&variant)) {
+    } else if (auto d = boost::get<TTemporal>(&variant)) {
       auto it = std::find(header.begin(), header.end(), d->index);
 
       if (it == header.end()) {
@@ -149,7 +149,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
 
       index_map[(*it)] = it - header.begin();
 
-    } else if (auto d = std::get_if<TPayload>(&variant)) {
+    } else if (auto d = boost::get<TPayload>(&variant)) {
       auto it = std::find(header.begin(), header.end(), d->index);
 
       if (it == header.end()) {
@@ -168,13 +168,13 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
 
   // reserve memory
   for (auto &variant : schema.dimensions) {
-    if (auto d = std::get_if<TSpatial>(&variant)) {
+    if (auto d = boost::get<TSpatial>(&variant)) {
       d->data.reserve(d->data.size() + num_lines);
-    } else if (auto d = std::get_if<TCategorical>(&variant)) {
+    } else if (auto d = boost::get<TCategorical>(&variant)) {
       d->data.reserve(d->data.size() + num_lines);
-    } else if (auto d = std::get_if<TTemporal>(&variant)) {
+    } else if (auto d = boost::get<TTemporal>(&variant)) {
       d->data.reserve(d->data.size() + num_lines);
-    } else if (auto d = std::get_if<TPayload>(&variant)) {
+    } else if (auto d = boost::get<TPayload>(&variant)) {
       d->data.reserve(d->data.size() + num_lines);
     }
   }
@@ -213,7 +213,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
 
       bool invalid = false;
       for (auto &variant : schema.dimensions) {
-        if (auto d = std::get_if<TSpatial>(&variant)) {
+        if (auto d = boost::get<TSpatial>(&variant)) {
           if (unformatted_data[index_map[d->index_lat]].empty()) {
             invalid = true;
             break;
@@ -232,7 +232,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
             break;
           }
 
-        } else if (auto d = std::get_if<TCategorical>(&variant)) {
+        } else if (auto d = boost::get<TCategorical>(&variant)) {
           if (unformatted_data[index_map[d->index]].empty()) {
             invalid = true;
             break;
@@ -269,7 +269,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
             break;
           }
 
-        } else if (auto d = std::get_if<TTemporal>(&variant)) {
+        } else if (auto d = boost::get<TTemporal>(&variant)) {
           if (unformatted_data[index_map[d->index]].empty()) {
             invalid = true;
             break;
@@ -289,7 +289,7 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
             break;
           }
 
-        } else if (auto d = std::get_if<TPayload>(&variant)) {
+        } else if (auto d = boost::get<TPayload>(&variant)) {
           if (unformatted_data[index_map[d->index]].empty()) {
             invalid = true;
             break;
@@ -311,13 +311,13 @@ void read_csv_file(TSchema &schema, BinaryHeader &bin_header, const std::string 
 
       // emplace_back valid data
       for (auto &variant : schema.dimensions) {
-        if (auto d = std::get_if<TSpatial>(&variant)) {
+        if (auto d = boost::get<TSpatial>(&variant)) {
           d->data.emplace_back(d->temporary);
-        } else if (auto d = std::get_if<TCategorical>(&variant)) {
+        } else if (auto d = boost::get<TCategorical>(&variant)) {
           d->data.emplace_back(d->temporary);
-        } else if (auto d = std::get_if<TTemporal>(&variant)) {
+        } else if (auto d = boost::get<TTemporal>(&variant)) {
           d->data.emplace_back(d->temporary);
-        } else if (auto d = std::get_if<TPayload>(&variant)) {
+        } else if (auto d = boost::get<TPayload>(&variant)) {
           d->data.emplace_back(d->temporary);
         }
       }
@@ -360,13 +360,13 @@ void gerenate_from_csv(TSchema &schema, const std::string &sep) {
   std::ofstream binary(schema.output_dir + "/" + schema.output + ".nds", std::ios::out | std::ios::binary);
 
   for (auto &variant : schema.dimensions) {
-    if (auto d = std::get_if<TSpatial>(&variant)) {
+    if (auto d = boost::get<TSpatial>(&variant)) {
       bin_header.bytes += d->bytes();
-    } else if (auto d = std::get_if<TCategorical>(&variant)) {
+    } else if (auto d = boost::get<TCategorical>(&variant)) {
       bin_header.bytes += d->bytes();
-    } else if (auto d = std::get_if<TTemporal>(&variant)) {
+    } else if (auto d = boost::get<TTemporal>(&variant)) {
       bin_header.bytes += d->bytes();
-    } else if (auto d = std::get_if<TPayload>(&variant)) {
+    } else if (auto d = boost::get<TPayload>(&variant)) {
       bin_header.bytes += d->bytes();
     }
   }
@@ -379,13 +379,13 @@ void gerenate_from_csv(TSchema &schema, const std::string &sep) {
 
   // writer formatted values
   for (auto &variant : schema.dimensions) {
-    if (auto d = std::get_if<TSpatial>(&variant)) {
+    if (auto d = boost::get<TSpatial>(&variant)) {
       binary.write((char *) &d->data[0], d->data.size() * d->bytes());
-    } else if (auto d = std::get_if<TCategorical>(&variant)) {
+    } else if (auto d = boost::get<TCategorical>(&variant)) {
       binary.write((char *) &d->data[0], d->data.size() * d->bytes());
-    } else if (auto d = std::get_if<TTemporal>(&variant)) {
+    } else if (auto d = boost::get<TTemporal>(&variant)) {
       binary.write((char *) &d->data[0], d->data.size() * d->bytes());
-    } else if (auto d = std::get_if<TPayload>(&variant)) {
+    } else if (auto d = boost::get<TPayload>(&variant)) {
       binary.write((char *) &d->data[0], d->data.size() * d->bytes());
     }
   }

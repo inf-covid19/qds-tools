@@ -1,0 +1,33 @@
+BEGIN
+sus_cont_ciap_mini
+seg out  7 06:39:40 -03 2019
+log: parsing [./data/sus_cont_ciap_2_mini/sus_cont_ciap_mini_prev4.csv]
+log: writing binary file
+log: elts_n: 20917832
+log: elts_size: 28
+seg out  7 06:47:29 -03 2019
+
+sus_cont_ciap_mini_inv
+seg out  7 06:47:29 -03 2019
+log: parsing [./data/sus_cont_ciap_2_mini/sus_cont_ciap_mini_prev4.csv]
+log: writing binary file
+log: elts_n: 20917832
+log: elts_size: 28
+seg out  7 06:55:14 -03 2019
+
+sus_cont_ciap
+seg out  7 06:55:14 -03 2019
+log: parsing [./data/sus_cont_ciap_2/sus_cont_ciap_prev4.csv]
+log: writing binary file
+log: elts_n: 209178327
+log: elts_size: 24
+seg out  7 08:12:39 -03 2019
+
+sus_cont_ciap_inv
+seg out  7 08:12:39 -03 2019
+log: parsing [./data/sus_cont_ciap_2/sus_cont_ciap_prev4.csv]
+log: writing binary file
+log: elts_n: 209178327
+log: elts_size: 24
+seg out  7 09:29:29 -03 2019
+END

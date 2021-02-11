@@ -4,14 +4,14 @@
     <output>example</output>
     <output-dir>./output</output-dir>
     <schema>
-        <categorical index="0" type="discrete" name="gender">
+        <categorical index="Gênero" type="discrete" name="gender">
             <attributes>
                 <bin>M</bin>
                 <bin>F</bin>
             </attributes>
         </categorical>
 
-        <categorical index="1" type="range" name="age">
+        <categorical index="Idade" type="range" name="age">
             <attributes>
                 <bin>
                     <min>0</min>
@@ -40,25 +40,25 @@
             </attributes>
         </categorical>
 
-        <categorical index="2" type="binary" name="status">
+        <categorical index="Status" type="binary" name="status">
         </categorical>
 
 
-        <categorical index="3" type="sequential" name="origin">
+        <categorical index="Origem" type="sequential" name="origin">
             <attributes>
                 <min>0</min>
                 <max>9</max>
             </attributes>
         </categorical>
 
-        <temporal index="4" name="date">
+        <temporal index="Data" name="date">
             <attributes>
                 <format>%d/%m/%Y-%H:%M</format>
                 <interval>86400</interval>
             </attributes>
         </temporal>
 
-        <spatial index-lat="5" index-lon="6" name="coord">
+        <spatial index-lat=" Lat" index-lon=" Lon" name="coord">
             <attributes>
                 <bin>1</bin>
             </attributes>

@@ -356,4 +356,7 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 
+# VIM
+*.swp
+
 # End of https://www.gitignore.io/api/c++,cmake,linux,visualstudio,visualstudiocode

@@ -16,7 +16,6 @@
 #include <vector>
 #include <string>
 #include <random>
-#include <variant>
 #include <fstream>
 #include <iostream>
 #include <algorithm>
@@ -33,3 +32,4 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/range/iterator_range.hpp>
+#include <boost/variant.hpp>
