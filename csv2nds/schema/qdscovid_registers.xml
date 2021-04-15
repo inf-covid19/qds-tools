@@ -6,8 +6,105 @@
   <schema>
     <categorical index="profissionalSaude" type="discrete" name="profissionalSaude">
       <attributes>
-        <bin>Sim</bin>
         <bin>Nao</bin>
+        <bin>Sim</bin>
+      </attributes>
+    </categorical>
+    <categorical index="sexo" type="discrete" name="sexo">
+      <attributes>
+        <bin>Feminino</bin>
+        <bin>Masculino</bin>
+      </attributes>
+    </categorical>
+    <categorical index="condicoes_count" type="range" name="condicoes_count">
+      <attributes>
+        <bin>
+          <min>0</min>
+          <max>0</max>
+        </bin>
+        <bin>
+          <min>1</min>
+          <max>1</max>
+        </bin>
+        <bin>
+          <min>2</min>
+          <max>13</max>
+        </bin>
+      </attributes>
+    </categorical>
+    <categorical index="resultadoTeste" type="discrete" name="resultadoTeste">
+      <attributes>
+        <bin>Inconclusivo ou Indeterminado</bin>
+        <bin>Negativo</bin>
+        <bin>Positivo</bin>
+        <bin>Indefinido</bin>
+      </attributes>
+    </categorical>
+    <categorical index="sintomas_count" type="range" name="sintomas_count">
+      <attributes>
+        <bin>
+          <min>0</min>
+          <max>0</max>
+        </bin>
+        <bin>
+          <min>1</min>
+          <max>1</max>
+        </bin>
+        <bin>
+          <min>2</min>
+          <max>2</max>
+        </bin>
+        <bin>
+          <min>3</min>
+          <max>3</max>
+        </bin>
+        <bin>
+          <min>4</min>
+          <max>10</max>
+        </bin>
+      </attributes>
+    </categorical>
+    <categorical index="estadoTeste" type="discrete" name="estadoTeste">
+      <attributes>
+        <bin>Coletado</bin>
+        <bin>Concluido</bin>
+        <bin>Exame Nao Solicitado</bin>
+        <bin>Solicitado</bin>
+        <bin>Indefinido</bin>
+      </attributes>
+    </categorical>
+    <categorical index="tipoTeste" type="discrete" name="tipoTeste">
+      <attributes>
+        <bin>ELISA IgM</bin>
+        <bin>ECLIA IgG</bin>
+        <bin>CLIA</bin>
+        <bin>RT-PCR</bin>
+        <bin>ANTICORPO</bin>
+        <bin>ANTIGENO</bin>
+        <bin>Indefinido</bin>
+      </attributes>
+    </categorical>
+    <categorical index="classificacaoFinal" type="discrete" name="classificacaoFinal">
+      <attributes>
+        <bin>Cli.-Epid.</bin>
+        <bin>Cli.-Img.</bin>
+        <bin>Lab.</bin>
+        <bin>Cri. Cli.</bin>
+        <bin>Desc.</bin>
+        <bin>SGNE</bin>
+        <bin>Indefinido</bin>
+      </attributes>
+    </categorical>
+    <categorical index="evolucaoCaso" type="discrete" name="evolucaoCaso">
+      <attributes>
+        <bin>Cancelado</bin>
+        <bin>Cura</bin>
+        <bin>Em tratamento domiciliar</bin>
+        <bin>Ignorado</bin>
+        <bin>Internado</bin>
+        <bin>Internado em UTI</bin>
+        <bin>Obito</bin>
+        <bin>Indefinido</bin>
       </attributes>
     </categorical>
     <categorical index="idade" type="range" name="idade">
@@ -90,76 +187,7 @@
         </bin>
       </attributes>
     </categorical>
-    <categorical index="sexo" type="discrete" name="sexo">
-      <attributes>
-        <bin>Feminino</bin>
-        <bin>Masculino</bin>
-      </attributes>
-    </categorical>
-    <categorical index="estadoTeste" type="discrete" name="estadoTeste">
-      <attributes>
-        <bin>Solicitado</bin>
-        <bin>Coletado</bin>
-        <bin>Concluido</bin>
-        <bin>Exame Nao Solicitado</bin>
-        <bin>Indefinido</bin>
-      </attributes>
-    </categorical>
-    <categorical index="tipoTeste" type="discrete" name="tipoTeste">
-      <attributes>
-        <bin>RT-PCR</bin>
-        <bin>ANTICORPO</bin>
-        <bin>ANTIGENO</bin>
-        <bin>ECLIA IgG</bin>
-        <bin>ELISA IgM</bin>
-        <bin>CLIA</bin>
-        <bin>Indefinido</bin>
-      </attributes>
-    </categorical>
-    <categorical index="resultadoTeste" type="discrete" name="resultadoTeste">
-      <attributes>
-        <bin>Negativo</bin>
-        <bin>Positivo</bin>
-        <bin>Inconclusivo ou Indeterminado</bin>
-        <bin>Indefinido</bin>
-      </attributes>
-    </categorical>
-    <categorical index="evolucaoCaso" type="discrete" name="evolucaoCaso">
-      <attributes>
-        <bin>Cancelado</bin>
-        <bin>Ignorado</bin>
-        <bin>Em tratamento domiciliar</bin>
-        <bin>Internado em UTI</bin>
-        <bin>Internado</bin>
-        <bin>Obito</bin>
-        <bin>Cura</bin>
-        <bin>Indefinido</bin>
-      </attributes>
-    </categorical>
-    <categorical index="classificacaoFinal" type="discrete" name="classificacaoFinal">
-      <attributes>
-        <bin>Desc.</bin>
-        <bin>Cli.-Img.</bin>
-        <bin>Cli.-Epid.</bin>
-        <bin>Cri. Cli.</bin>
-        <bin>Lab.</bin>
-        <bin>SGNE</bin>
-        <bin>Indefinido</bin>
-      </attributes>
-    </categorical>
-    <temporal index="dataInicioSintomas" name="dataInicioSintomas">
-      <attributes>
-        <format>%Y-%m-%d</format>
-        <interval>86400</interval>
-      </attributes>
-    </temporal>
-    <temporal index="dataNotificacao" name="dataNotificacao">
-      <attributes>
-        <format>%Y-%m-%d</format>
-        <interval>86400</interval>
-      </attributes>
-    </temporal>
-    <categorical index="estadoNotificacaoIBGE" type="discrete" name="estadoNotificacaoIBGE">
+    <categorical index="estadoIBGE" type="discrete" name="estadoIBGE">
       <attributes>
         <bin>11</bin>
         <bin>12</bin>
@@ -191,7 +219,7 @@
         <bin>Indefinido</bin>
       </attributes>
     </categorical>
-    <categorical index="municipioNotificacaoIBGE" type="discrete" name="municipioNotificacaoIBGE">
+    <categorical index="municipioIBGE" type="discrete" name="municipioIBGE">
       <attributes>
         <bin>1100015</bin>
         <bin>1100023</bin>
@@ -1084,6 +1112,7 @@
         <bin>2211506</bin>
         <bin>2211605</bin>
         <bin>2211704</bin>
+        <bin>2300101</bin>
         <bin>2300150</bin>
         <bin>2300200</bin>
         <bin>2300309</bin>
@@ -1096,9 +1125,11 @@
         <bin>2300903</bin>
         <bin>2301000</bin>
         <bin>2301109</bin>
+        <bin>2301208</bin>
         <bin>2301257</bin>
         <bin>2301307</bin>
         <bin>2301406</bin>
+        <bin>2301505</bin>
         <bin>2301604</bin>
         <bin>2301703</bin>
         <bin>2301802</bin>
@@ -1116,6 +1147,7 @@
         <bin>2302701</bin>
         <bin>2302800</bin>
         <bin>2302909</bin>
+        <bin>2303006</bin>
         <bin>2303105</bin>
         <bin>2303204</bin>
         <bin>2303303</bin>
@@ -1126,6 +1158,7 @@
         <bin>2303709</bin>
         <bin>2303808</bin>
         <bin>2303907</bin>
+        <bin>2303931</bin>
         <bin>2303956</bin>
         <bin>2304004</bin>
         <bin>2304103</bin>
@@ -1141,13 +1174,16 @@
         <bin>2304459</bin>
         <bin>2304509</bin>
         <bin>2304608</bin>
+        <bin>2304657</bin>
         <bin>2304707</bin>
         <bin>2304806</bin>
         <bin>2304905</bin>
+        <bin>2304954</bin>
         <bin>2305001</bin>
         <bin>2305100</bin>
         <bin>2305209</bin>
         <bin>2305233</bin>
+        <bin>2305266</bin>
         <bin>2305308</bin>
         <bin>2305332</bin>
         <bin>2305357</bin>
@@ -1160,17 +1196,22 @@
         <bin>2305902</bin>
         <bin>2306009</bin>
         <bin>2306108</bin>
+        <bin>2306207</bin>
         <bin>2306256</bin>
+        <bin>2306306</bin>
         <bin>2306405</bin>
         <bin>2306504</bin>
         <bin>2306553</bin>
+        <bin>2306603</bin>
         <bin>2306702</bin>
         <bin>2306801</bin>
         <bin>2306900</bin>
         <bin>2307007</bin>
+        <bin>2307106</bin>
         <bin>2307205</bin>
         <bin>2307254</bin>
         <bin>2307304</bin>
+        <bin>2307403</bin>
         <bin>2307502</bin>
         <bin>2307601</bin>
         <bin>2307635</bin>
@@ -1182,13 +1223,16 @@
         <bin>2308104</bin>
         <bin>2308203</bin>
         <bin>2308302</bin>
+        <bin>2308351</bin>
         <bin>2308377</bin>
         <bin>2308401</bin>
         <bin>2308500</bin>
         <bin>2308609</bin>
         <bin>2308708</bin>
+        <bin>2308807</bin>
         <bin>2308906</bin>
         <bin>2309003</bin>
+        <bin>2309102</bin>
         <bin>2309201</bin>
         <bin>2309300</bin>
         <bin>2309409</bin>
@@ -1197,13 +1241,16 @@
         <bin>2309607</bin>
         <bin>2309706</bin>
         <bin>2309805</bin>
+        <bin>2309904</bin>
         <bin>2310001</bin>
         <bin>2310100</bin>
         <bin>2310209</bin>
+        <bin>2310258</bin>
         <bin>2310308</bin>
         <bin>2310407</bin>
         <bin>2310506</bin>
         <bin>2310605</bin>
+        <bin>2310704</bin>
         <bin>2310803</bin>
         <bin>2310852</bin>
         <bin>2310902</bin>
@@ -1220,6 +1267,7 @@
         <bin>2311603</bin>
         <bin>2311702</bin>
         <bin>2311801</bin>
+        <bin>2311900</bin>
         <bin>2311959</bin>
         <bin>2312007</bin>
         <bin>2312106</bin>
@@ -1229,6 +1277,7 @@
         <bin>2312502</bin>
         <bin>2312601</bin>
         <bin>2312700</bin>
+        <bin>2312809</bin>
         <bin>2312908</bin>
         <bin>2313005</bin>
         <bin>2313104</bin>
@@ -1238,9 +1287,11 @@
         <bin>2313351</bin>
         <bin>2313401</bin>
         <bin>2313500</bin>
+        <bin>2313559</bin>
         <bin>2313609</bin>
         <bin>2313708</bin>
         <bin>2313757</bin>
+        <bin>2313807</bin>
         <bin>2313906</bin>
         <bin>2313955</bin>
         <bin>2314003</bin>
@@ -1643,6 +1694,7 @@
         <bin>2600500</bin>
         <bin>2600609</bin>
         <bin>2600708</bin>
+        <bin>2600807</bin>
         <bin>2600906</bin>
         <bin>2601003</bin>
         <bin>2601052</bin>
@@ -1662,11 +1714,13 @@
         <bin>2602407</bin>
         <bin>2602506</bin>
         <bin>2602605</bin>
+        <bin>2602704</bin>
         <bin>2602803</bin>
         <bin>2602902</bin>
         <bin>2603009</bin>
         <bin>2603108</bin>
         <bin>2603207</bin>
+        <bin>2603306</bin>
         <bin>2603405</bin>
         <bin>2603454</bin>
         <bin>2603504</bin>
@@ -1674,6 +1728,7 @@
         <bin>2603702</bin>
         <bin>2603801</bin>
         <bin>2603900</bin>
+        <bin>2603926</bin>
         <bin>2604007</bin>
         <bin>2604106</bin>
         <bin>2604155</bin>
@@ -1695,13 +1750,16 @@
         <bin>2605509</bin>
         <bin>2605608</bin>
         <bin>2605707</bin>
+        <bin>2605806</bin>
         <bin>2605905</bin>
         <bin>2606002</bin>
         <bin>2606101</bin>
         <bin>2606200</bin>
         <bin>2606309</bin>
         <bin>2606408</bin>
+        <bin>2606507</bin>
         <bin>2606606</bin>
+        <bin>2606705</bin>
         <bin>2606804</bin>
         <bin>2606903</bin>
         <bin>2607000</bin>
@@ -1721,7 +1779,9 @@
         <bin>2608057</bin>
         <bin>2608107</bin>
         <bin>2608206</bin>
+        <bin>2608255</bin>
         <bin>2608305</bin>
+        <bin>2608404</bin>
         <bin>2608453</bin>
         <bin>2608503</bin>
         <bin>2608602</bin>
@@ -1733,6 +1793,7 @@
         <bin>2609105</bin>
         <bin>2609154</bin>
         <bin>2609204</bin>
+        <bin>2609303</bin>
         <bin>2609402</bin>
         <bin>2609501</bin>
         <bin>2609600</bin>
@@ -1751,16 +1812,21 @@
         <bin>2610905</bin>
         <bin>2611002</bin>
         <bin>2611101</bin>
+        <bin>2611200</bin>
         <bin>2611309</bin>
         <bin>2611408</bin>
         <bin>2611507</bin>
         <bin>2611533</bin>
         <bin>2611606</bin>
         <bin>2611705</bin>
+        <bin>2611804</bin>
+        <bin>2611903</bin>
         <bin>2612000</bin>
+        <bin>2612109</bin>
         <bin>2612208</bin>
         <bin>2612307</bin>
         <bin>2612406</bin>
+        <bin>2612455</bin>
         <bin>2612471</bin>
         <bin>2612505</bin>
         <bin>2612554</bin>
@@ -1769,7 +1835,9 @@
         <bin>2612802</bin>
         <bin>2612901</bin>
         <bin>2613008</bin>
+        <bin>2613107</bin>
         <bin>2613206</bin>
+        <bin>2613305</bin>
         <bin>2613404</bin>
         <bin>2613503</bin>
         <bin>2613602</bin>
@@ -1791,6 +1859,7 @@
         <bin>2615201</bin>
         <bin>2615300</bin>
         <bin>2615409</bin>
+        <bin>2615508</bin>
         <bin>2615607</bin>
         <bin>2615706</bin>
         <bin>2615805</bin>
@@ -4064,77 +4133,405 @@
         <bin>3557154</bin>
         <bin>3557204</bin>
         <bin>3557303</bin>
+        <bin>4100103</bin>
+        <bin>4100202</bin>
+        <bin>4100301</bin>
         <bin>4100400</bin>
+        <bin>4100459</bin>
+        <bin>4100509</bin>
+        <bin>4100608</bin>
+        <bin>4100707</bin>
+        <bin>4100806</bin>
+        <bin>4100905</bin>
+        <bin>4101002</bin>
+        <bin>4101051</bin>
+        <bin>4101101</bin>
+        <bin>4101150</bin>
+        <bin>4101200</bin>
+        <bin>4101309</bin>
         <bin>4101408</bin>
         <bin>4101507</bin>
         <bin>4101606</bin>
+        <bin>4101655</bin>
+        <bin>4101705</bin>
         <bin>4101804</bin>
+        <bin>4101853</bin>
+        <bin>4101903</bin>
         <bin>4102000</bin>
+        <bin>4102109</bin>
+        <bin>4102208</bin>
+        <bin>4102307</bin>
+        <bin>4102406</bin>
+        <bin>4102505</bin>
+        <bin>4102604</bin>
+        <bin>4102703</bin>
+        <bin>4102752</bin>
+        <bin>4102802</bin>
+        <bin>4102901</bin>
+        <bin>4103008</bin>
         <bin>4103024</bin>
+        <bin>4103040</bin>
+        <bin>4103057</bin>
+        <bin>4103107</bin>
+        <bin>4103156</bin>
+        <bin>4103206</bin>
+        <bin>4103222</bin>
+        <bin>4103305</bin>
+        <bin>4103354</bin>
+        <bin>4103370</bin>
+        <bin>4103404</bin>
+        <bin>4103453</bin>
+        <bin>4103479</bin>
+        <bin>4103503</bin>
         <bin>4103602</bin>
+        <bin>4103701</bin>
+        <bin>4103800</bin>
+        <bin>4103909</bin>
+        <bin>4103958</bin>
         <bin>4104006</bin>
+        <bin>4104055</bin>
         <bin>4104105</bin>
         <bin>4104204</bin>
+        <bin>4104253</bin>
         <bin>4104303</bin>
+        <bin>4104402</bin>
+        <bin>4104428</bin>
+        <bin>4104451</bin>
+        <bin>4104501</bin>
+        <bin>4104600</bin>
+        <bin>4104659</bin>
+        <bin>4104709</bin>
         <bin>4104808</bin>
         <bin>4104907</bin>
+        <bin>4105003</bin>
+        <bin>4105102</bin>
+        <bin>4105201</bin>
+        <bin>4105300</bin>
+        <bin>4105409</bin>
         <bin>4105508</bin>
+        <bin>4105607</bin>
         <bin>4105706</bin>
         <bin>4105805</bin>
+        <bin>4105904</bin>
+        <bin>4106001</bin>
+        <bin>4106100</bin>
+        <bin>4106209</bin>
+        <bin>4106308</bin>
         <bin>4106407</bin>
+        <bin>4106456</bin>
+        <bin>4106506</bin>
+        <bin>4106555</bin>
+        <bin>4106571</bin>
+        <bin>4106605</bin>
+        <bin>4106704</bin>
+        <bin>4106803</bin>
+        <bin>4106852</bin>
         <bin>4106902</bin>
+        <bin>4107009</bin>
+        <bin>4107108</bin>
+        <bin>4107124</bin>
+        <bin>4107157</bin>
         <bin>4107207</bin>
+        <bin>4107256</bin>
+        <bin>4107306</bin>
+        <bin>4107405</bin>
+        <bin>4107504</bin>
+        <bin>4107520</bin>
+        <bin>4107538</bin>
+        <bin>4107546</bin>
         <bin>4107553</bin>
+        <bin>4107603</bin>
+        <bin>4107652</bin>
         <bin>4107702</bin>
+        <bin>4107736</bin>
+        <bin>4107751</bin>
+        <bin>4107801</bin>
+        <bin>4107850</bin>
+        <bin>4107900</bin>
+        <bin>4108007</bin>
+        <bin>4108106</bin>
+        <bin>4108205</bin>
         <bin>4108304</bin>
+        <bin>4108320</bin>
+        <bin>4108403</bin>
         <bin>4108452</bin>
+        <bin>4108502</bin>
+        <bin>4108551</bin>
+        <bin>4108601</bin>
+        <bin>4108650</bin>
+        <bin>4108700</bin>
         <bin>4108809</bin>
+        <bin>4108908</bin>
+        <bin>4108957</bin>
+        <bin>4109005</bin>
+        <bin>4109104</bin>
+        <bin>4109203</bin>
+        <bin>4109302</bin>
         <bin>4109401</bin>
+        <bin>4109500</bin>
+        <bin>4109609</bin>
+        <bin>4109658</bin>
+        <bin>4109708</bin>
+        <bin>4109757</bin>
+        <bin>4109807</bin>
+        <bin>4109906</bin>
+        <bin>4110003</bin>
+        <bin>4110052</bin>
+        <bin>4110078</bin>
+        <bin>4110102</bin>
+        <bin>4110201</bin>
+        <bin>4110300</bin>
+        <bin>4110409</bin>
+        <bin>4110508</bin>
+        <bin>4110607</bin>
+        <bin>4110656</bin>
+        <bin>4110706</bin>
+        <bin>4110805</bin>
+        <bin>4110904</bin>
+        <bin>4110953</bin>
+        <bin>4111001</bin>
+        <bin>4111100</bin>
+        <bin>4111209</bin>
+        <bin>4111258</bin>
+        <bin>4111308</bin>
+        <bin>4111407</bin>
+        <bin>4111506</bin>
+        <bin>4111555</bin>
+        <bin>4111605</bin>
+        <bin>4111704</bin>
         <bin>4111803</bin>
+        <bin>4111902</bin>
         <bin>4112009</bin>
         <bin>4112108</bin>
+        <bin>4112207</bin>
+        <bin>4112306</bin>
+        <bin>4112405</bin>
+        <bin>4112504</bin>
+        <bin>4112603</bin>
+        <bin>4112702</bin>
+        <bin>4112751</bin>
+        <bin>4112801</bin>
+        <bin>4112900</bin>
+        <bin>4112959</bin>
+        <bin>4113007</bin>
+        <bin>4113106</bin>
         <bin>4113205</bin>
+        <bin>4113254</bin>
         <bin>4113304</bin>
         <bin>4113403</bin>
+        <bin>4113429</bin>
+        <bin>4113452</bin>
+        <bin>4113502</bin>
+        <bin>4113601</bin>
         <bin>4113700</bin>
+        <bin>4113734</bin>
+        <bin>4113759</bin>
+        <bin>4113809</bin>
+        <bin>4113908</bin>
+        <bin>4114005</bin>
+        <bin>4114104</bin>
+        <bin>4114203</bin>
+        <bin>4114302</bin>
+        <bin>4114351</bin>
+        <bin>4114401</bin>
+        <bin>4114500</bin>
         <bin>4114609</bin>
+        <bin>4114708</bin>
+        <bin>4114807</bin>
+        <bin>4114906</bin>
+        <bin>4115002</bin>
+        <bin>4115101</bin>
         <bin>4115200</bin>
+        <bin>4115309</bin>
+        <bin>4115358</bin>
+        <bin>4115408</bin>
+        <bin>4115457</bin>
+        <bin>4115507</bin>
+        <bin>4115606</bin>
         <bin>4115705</bin>
+        <bin>4115739</bin>
+        <bin>4115754</bin>
         <bin>4115804</bin>
+        <bin>4115853</bin>
+        <bin>4115903</bin>
+        <bin>4116000</bin>
         <bin>4116059</bin>
+        <bin>4116109</bin>
+        <bin>4116208</bin>
+        <bin>4116307</bin>
+        <bin>4116406</bin>
+        <bin>4116505</bin>
+        <bin>4116604</bin>
+        <bin>4116703</bin>
+        <bin>4116802</bin>
         <bin>4116901</bin>
+        <bin>4116950</bin>
+        <bin>4117008</bin>
+        <bin>4117057</bin>
+        <bin>4117107</bin>
+        <bin>4117206</bin>
+        <bin>4117214</bin>
+        <bin>4117222</bin>
+        <bin>4117255</bin>
+        <bin>4117271</bin>
+        <bin>4117297</bin>
+        <bin>4117305</bin>
+        <bin>4117404</bin>
+        <bin>4117453</bin>
+        <bin>4117503</bin>
         <bin>4117602</bin>
         <bin>4117701</bin>
+        <bin>4117800</bin>
+        <bin>4117909</bin>
+        <bin>4118006</bin>
+        <bin>4118105</bin>
         <bin>4118204</bin>
+        <bin>4118303</bin>
         <bin>4118402</bin>
+        <bin>4118451</bin>
         <bin>4118501</bin>
+        <bin>4118600</bin>
+        <bin>4118709</bin>
         <bin>4118808</bin>
+        <bin>4118857</bin>
+        <bin>4118907</bin>
+        <bin>4119004</bin>
+        <bin>4119103</bin>
         <bin>4119152</bin>
+        <bin>4119202</bin>
+        <bin>4119251</bin>
         <bin>4119301</bin>
+        <bin>4119400</bin>
         <bin>4119509</bin>
+        <bin>4119608</bin>
+        <bin>4119657</bin>
+        <bin>4119707</bin>
+        <bin>4119806</bin>
         <bin>4119905</bin>
+        <bin>4119954</bin>
+        <bin>4120002</bin>
+        <bin>4120101</bin>
+        <bin>4120150</bin>
+        <bin>4120200</bin>
+        <bin>4120309</bin>
+        <bin>4120333</bin>
+        <bin>4120358</bin>
+        <bin>4120408</bin>
+        <bin>4120507</bin>
+        <bin>4120606</bin>
+        <bin>4120655</bin>
+        <bin>4120705</bin>
+        <bin>4120804</bin>
+        <bin>4120853</bin>
+        <bin>4120903</bin>
         <bin>4121000</bin>
+        <bin>4121109</bin>
         <bin>4121208</bin>
+        <bin>4121257</bin>
+        <bin>4121307</bin>
+        <bin>4121356</bin>
+        <bin>4121406</bin>
         <bin>4121505</bin>
+        <bin>4121604</bin>
         <bin>4121703</bin>
+        <bin>4121752</bin>
+        <bin>4121802</bin>
+        <bin>4121901</bin>
+        <bin>4122008</bin>
+        <bin>4122107</bin>
+        <bin>4122156</bin>
+        <bin>4122172</bin>
+        <bin>4122206</bin>
         <bin>4122305</bin>
+        <bin>4122404</bin>
+        <bin>4122503</bin>
+        <bin>4122602</bin>
+        <bin>4122651</bin>
+        <bin>4122701</bin>
+        <bin>4122800</bin>
+        <bin>4122909</bin>
         <bin>4123006</bin>
+        <bin>4123105</bin>
+        <bin>4123204</bin>
+        <bin>4123303</bin>
+        <bin>4123402</bin>
         <bin>4123501</bin>
+        <bin>4123600</bin>
         <bin>4123709</bin>
+        <bin>4123808</bin>
+        <bin>4123824</bin>
+        <bin>4123857</bin>
+        <bin>4123907</bin>
+        <bin>4123956</bin>
+        <bin>4124004</bin>
         <bin>4124020</bin>
+        <bin>4124053</bin>
+        <bin>4124103</bin>
+        <bin>4124202</bin>
+        <bin>4124301</bin>
+        <bin>4124400</bin>
+        <bin>4124509</bin>
+        <bin>4124608</bin>
         <bin>4124707</bin>
+        <bin>4124806</bin>
+        <bin>4124905</bin>
+        <bin>4125001</bin>
+        <bin>4125100</bin>
+        <bin>4125209</bin>
+        <bin>4125308</bin>
+        <bin>4125357</bin>
+        <bin>4125407</bin>
+        <bin>4125456</bin>
         <bin>4125506</bin>
+        <bin>4125555</bin>
         <bin>4125605</bin>
+        <bin>4125704</bin>
+        <bin>4125753</bin>
+        <bin>4125803</bin>
+        <bin>4125902</bin>
+        <bin>4126009</bin>
+        <bin>4126108</bin>
+        <bin>4126207</bin>
+        <bin>4126256</bin>
+        <bin>4126272</bin>
+        <bin>4126306</bin>
+        <bin>4126355</bin>
         <bin>4126405</bin>
         <bin>4126504</bin>
+        <bin>4126603</bin>
+        <bin>4126652</bin>
+        <bin>4126678</bin>
         <bin>4126702</bin>
+        <bin>4126801</bin>
+        <bin>4126900</bin>
+        <bin>4127007</bin>
         <bin>4127106</bin>
+        <bin>4127205</bin>
+        <bin>4127304</bin>
+        <bin>4127403</bin>
+        <bin>4127502</bin>
+        <bin>4127601</bin>
         <bin>4127700</bin>
+        <bin>4127809</bin>
+        <bin>4127858</bin>
+        <bin>4127882</bin>
+        <bin>4127908</bin>
+        <bin>4127957</bin>
+        <bin>4127965</bin>
+        <bin>4128005</bin>
         <bin>4128104</bin>
         <bin>4128203</bin>
+        <bin>4128302</bin>
+        <bin>4128401</bin>
+        <bin>4128500</bin>
+        <bin>4128534</bin>
         <bin>4128559</bin>
         <bin>4128609</bin>
+        <bin>4128625</bin>
         <bin>4128633</bin>
+        <bin>4128658</bin>
+        <bin>4128708</bin>
+        <bin>4128807</bin>
         <bin>4200051</bin>
         <bin>4200101</bin>
         <bin>4200200</bin>
@@ -4187,6 +4584,7 @@
         <bin>4203105</bin>
         <bin>4203154</bin>
         <bin>4203204</bin>
+        <bin>4203253</bin>
         <bin>4203303</bin>
         <bin>4203402</bin>
         <bin>4203501</bin>
@@ -4334,6 +4732,7 @@
         <bin>4213104</bin>
         <bin>4213153</bin>
         <bin>4213203</bin>
+        <bin>4213302</bin>
         <bin>4213351</bin>
         <bin>4213401</bin>
         <bin>4213500</bin>
@@ -5395,5 +5794,17 @@
         <bin>Indefinido</bin>
       </attributes>
     </categorical>
+    <temporal index="dataInicioSintomas" name="dataInicioSintomas">
+      <attributes>
+        <format>%Y-%m-%d</format>
+        <interval>86400</interval>
+      </attributes>
+    </temporal>
+    <temporal index="dataNotificacao" name="dataNotificacao">
+      <attributes>
+        <format>%Y-%m-%d</format>
+        <interval>86400</interval>
+      </attributes>
+    </temporal>
   </schema>
 </config>
