@@ -6,51 +6,51 @@
   <schema>
     <categorical index="profissionalSaude" type="discrete" name="profissionalSaude">
       <attributes>
-        <bin>Nao</bin>
         <bin>Sim</bin>
+        <bin>Nao</bin>
       </attributes>
     </categorical>
     <categorical index="sexo" type="discrete" name="sexo">
       <attributes>
-        <bin>Feminino</bin>
         <bin>Masculino</bin>
+        <bin>Feminino</bin>
       </attributes>
     </categorical>
     <categorical index="resultadoTeste" type="discrete" name="resultadoTeste">
       <attributes>
-        <bin>Inconclusivo ou Indeterminado</bin>
         <bin>Negativo</bin>
         <bin>Positivo</bin>
+        <bin>Inconclusivo ou Indeterminado</bin>
         <bin>Indefinido</bin>
       </attributes>
     </categorical>
     <categorical index="estadoTeste" type="discrete" name="estadoTeste">
       <attributes>
+        <bin>Solicitado</bin>
         <bin>Coletado</bin>
         <bin>Concluido</bin>
         <bin>Exame Nao Solicitado</bin>
-        <bin>Solicitado</bin>
         <bin>Indefinido</bin>
       </attributes>
     </categorical>
     <categorical index="tipoTeste" type="discrete" name="tipoTeste">
       <attributes>
-        <bin>ELISA IgM</bin>
-        <bin>ECLIA IgG</bin>
-        <bin>CLIA</bin>
         <bin>RT-PCR</bin>
         <bin>ANTICORPO</bin>
         <bin>ANTIGENO</bin>
+        <bin>ECLIA IgG</bin>
+        <bin>ELISA IgM</bin>
+        <bin>CLIA</bin>
         <bin>Indefinido</bin>
       </attributes>
     </categorical>
     <categorical index="classificacaoFinal" type="discrete" name="classificacaoFinal">
       <attributes>
-        <bin>Cli.-Epid.</bin>
-        <bin>Cli.-Img.</bin>
-        <bin>Lab.</bin>
-        <bin>Cri. Cli.</bin>
         <bin>Desc.</bin>
+        <bin>Cli.-Img.</bin>
+        <bin>Cli.-Epid.</bin>
+        <bin>Cri. Cli.</bin>
+        <bin>Lab.</bin>
         <bin>SGNE</bin>
         <bin>Indefinido</bin>
       </attributes>
@@ -58,26 +58,26 @@
     <categorical index="evolucaoCaso" type="discrete" name="evolucaoCaso">
       <attributes>
         <bin>Cancelado</bin>
-        <bin>Cura</bin>
-        <bin>Em tratamento domiciliar</bin>
         <bin>Ignorado</bin>
-        <bin>Internado</bin>
+        <bin>Em tratamento domiciliar</bin>
         <bin>Internado em UTI</bin>
+        <bin>Internado</bin>
         <bin>Obito</bin>
+        <bin>Cura</bin>
         <bin>Indefinido</bin>
       </attributes>
     </categorical>
     <categorical index="condicoes" type="discrete" name="condicoes">
       <attributes>
-        <bin>Diabetes</bin>
-        <bin>Doe. card.</bin>
-        <bin>Doe. renais</bin>
         <bin>Doe. resp.</bin>
-        <bin>Gestante</bin>
+        <bin>Doe. card.</bin>
+        <bin>Diabetes</bin>
+        <bin>Doe. renais</bin>
         <bin>Imuno.</bin>
-        <bin>Obesidade</bin>
+        <bin>Gestante</bin>
         <bin>Doe. cromo.</bin>
         <bin>Puerpera</bin>
+        <bin>Obesidade</bin>
         <bin>Outros</bin>
       </attributes>
     </categorical>
